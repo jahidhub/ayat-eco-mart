@@ -4,7 +4,6 @@
 /node_modules/
 /public/storage
 /storage/*.key
-.env
 .phpunit.result.cache
 
 # Laravel IDE helper files
