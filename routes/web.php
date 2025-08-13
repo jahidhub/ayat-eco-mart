@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomeBannerController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -34,9 +35,13 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/banner', [HomeBannerController::class, 'index'])->name('admin.home_banner');
         Route::POST('/banner/add', [HomeBannerController::class, 'store'])->name('admin.home_banner.store');
 
-
-        Route::get('/products/sizes', [SizeController::class, 'index'])->name('admin.products.size.index');
-        Route::POST('/products/sizes/add', [SizeController::class, 'store'])->name('admin.products.size.store');
+        // SizeController
+        Route::get('/manage/sizes', [SizeController::class, 'index'])->name('admin.products.size.index');
+        Route::POST('/manage/sizes/add', [SizeController::class, 'store'])->name('admin.products.size.store');
+        
+        // ColorController
+        Route::get('/manage/colors', [ColorController::class, 'index'])->name('admin.manage.colors.index');
+        Route::post('/manage/colors/add', [ColorController::class, 'store'])->name('admin.manage.colors.store');
     });
 });
 

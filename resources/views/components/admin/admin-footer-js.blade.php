@@ -102,6 +102,7 @@
                      }
                  },
                  error: function(xhr) {
+                     console.log(xhr);
                      $('#submitButtonWrapper').html(submitBtn);
 
                      let message = 'An unexpected error occurred.';

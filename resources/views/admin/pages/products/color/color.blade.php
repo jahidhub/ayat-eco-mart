@@ -4,20 +4,20 @@
     <div class="page-wrapper">
         <div class="page-content">
             <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                <div class="breadcrumb-title pe-3">Size</div>
+                <div class="breadcrumb-title pe-3">Color</div>
                 <div class="ps-3">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-0 p-0">
                             <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Product Size</li>
+                            <li class="breadcrumb-item active" aria-current="page">Manage Color</li>
                         </ol>
                     </nav>
                 </div>
                 <div class="ms-auto">
-                    <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#size_model"
-                        onclick="saveData('0', '', 'Add Product Size' )">Add New
-                        Size</button>
+                    <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#color_model"
+                        onclick="saveData('0', '', '', 'Add Product Color' )">Add New
+                        Color</button>
 
                 </div>
             </div>
@@ -50,28 +50,37 @@
                                         style="width: 100%;">
                                         <thead class="table-light">
                                             <tr class="text-center">
-                                                <th>Size</th>
+                                                <th>Name</th>
+                                                <th>Color Code</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($sizes as $size)
+                                            @foreach ($colors as $color)
                                                 <tr>
-                                                    <td class="text-center fw-semibold text-dark">{{ $size->size }}</td>
+                                                    <td class="text-center fw-semibold text-dark">{{ $color->name }}</td>
+                                                    <td
+                                                        class="text-center fw-semibold text-dark d-flex justify-content-center">
+
+                                                        <div class="text-center p-4"
+                                                            style="background-color: {{ $color->code }}; width:100px">
+
+                                                        </div>
+
+                                                    </td>
 
                                                     <td class="text-center">
                                                         <div class="d-inline-flex gap-2">
                                                             <!-- Edit Button -->
-
                                                             <button
-                                                                onclick="saveData('{{ $size->id }}','{{ $size->size }}', 'Edit Product Size')"
+                                                                onclick="saveData('{{ $color->id }}','{{ $color->name }}','{{ $color->code }}', 'Edit Product Color')"
                                                                 class="btn btn-sm btn-outline-dark" title="Edit"
-                                                                data-bs-toggle="modal" data-bs-target="#size_model">
+                                                                data-bs-toggle="modal" data-bs-target="#color_model">
                                                                 <i class="lni lni-pencil-alt"></i>
                                                             </button>
 
                                                             <!-- Delete Button -->
-                                                            <button onclick="deleteData('{{ $size->id }}' , 'sizes' )"
+                                                            <button onclick="deleteData('{{ $color->id }}' , 'colors' )"
                                                                 class="btn btn-sm btn-outline-dark" title="Delete">
                                                                 <i class="lni lni-trash"></i>
                                                             </button>
@@ -87,14 +96,14 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-5">
                                     <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
-                                        Showing {{ $sizes->firstItem() }} to {{ $sizes->lastItem() }} of
-                                        {{ $sizes->total() }} entries
+                                        Showing {{ $colors->firstItem() }} to {{ $colors->lastItem() }} of
+                                        {{ $colors->total() }} entries
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-7">
                                     <div class="dataTables_paginate paging_simple_numbers d-flex justify-content-end"
                                         id="example_paginate">
-                                        {{ $sizes->links() }}
+                                        {{ $colors->links() }}
                                     </div>
                                 </div>
                             </div>
@@ -106,7 +115,7 @@
 
             {{-- Model Popup --}}
 
-            <div class="modal fade" id="size_model" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+            <div class="modal fade" id="color_model" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
 
@@ -117,7 +126,7 @@
                         </div>
 
                         <!-- Modal Body with Form -->
-                        <form id="form_submit" action="{{ route('admin.products.size.store') }}"
+                        <form id="form_submit" action="{{ route('admin.manage.colors.store') }}"
                             enctype="multipart/form-data">
 
 
@@ -125,13 +134,25 @@
                             <div class="modal-body">
                                 <input type="hidden" name="id" id="id">
                                 <div class="mb-3">
-                                    <label for="size" class="form-label fw-semibold">Product Size</label>
-                                    <input type="text" id="size" name="size" class="form-control form-control-lg"
-                                        placeholder="e.g. S, M, L, XL" aria-label="Product Size">
+                                    <label for="name" class="form-label fw-semibold">Color Name</label>
+                                    <input type="text" id="name" name="name"
+                                        class="form-control form-control-lg" placeholder="e.g. red, green , yellow"
+                                        aria-label="Product color">
                                     <div class="invalid-feedback">
-                                        Please enter a product size.
+                                        Please enter a color name.
                                     </div>
                                 </div>
+                                <div class="mb-3">
+                                    <label for="color_code" class="form-label fw-semibold">Color Hex Code</label>
+                                    <input type="text" id="color_code" name="color_code"
+                                        class="form-control form-control-lg" placeholder="e.g.red = #FF0000"
+                                        aria-label="Product Hex Code">
+                                    <div class="invalid-feedback">
+                                        Please enter a color Hex code.
+                                    </div>
+                                </div>
+                                <div id="color-box" class="p-4"></div>
+
 
                             </div>
 
@@ -156,13 +177,16 @@
 
 @section('customJs')
     <script>
-        function saveData(id, size_name, title) {
+        function saveData(id, color_name, code, title) {
             $('#id').val(id);
-            $('#size').val(size_name);
+            $('#name').val(color_name);
+            $('#color_code').val(code);
+            $('#color-box').css('background-color', code);
             $('#modal-title').text(title);
         }
 
-        document.getElementById('size').addEventListener('input', function() {
+
+        document.getElementById('color').addEventListener('input', function() {
             this.classList.toggle('is-invalid', !this.value.trim());
         });
     </script>

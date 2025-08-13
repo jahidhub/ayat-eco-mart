@@ -44,8 +44,8 @@ class HomeBannerController extends Controller
         $validation = Validator::make($request->all(), [
 
             'content'   => 'required|string',
-            'link'      => 'nullable|string',
-            'new_image' => $request->id
+            'link'      => 'nullable|string|url',
+            'new_image' => $request->id > 0
                 ? 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
                 : 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
 
