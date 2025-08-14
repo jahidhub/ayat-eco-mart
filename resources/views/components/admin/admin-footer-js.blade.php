@@ -223,3 +223,16 @@
          preview.src = URL.createObjectURL(file);
      }
  </script>
+
+ <script>
+     document.getElementById('name').addEventListener('input', function() {
+         let name = this.value;
+         let slug = name
+             .toLowerCase()
+             .trim()
+             .replace(/[^a-z0-9\s-]/g, '') // remove special chars
+             .replace(/\s+/g, '-') // spaces to dashes
+             .replace(/-+/g, '-'); // collapse multiple dashes
+         document.getElementById('slug').value = slug;
+     });
+ </script>

@@ -41,14 +41,23 @@
                   </li>
                   <li> <a href="{{ route('admin.manage.colors.index') }}"><i class="bx bx-right-arrow-alt"></i>Color</a>
                   </li>
-                  <li> <a href="ecommerce-products-details.html"><i class="bx bx-right-arrow-alt"></i>Product
-                          Details</a>
+                  <li>
+                      <a href="javascript:;" class="has-arrow">
+                          <div class="menu-title">Attributes</div>
+                      </a>
+                      <ul>
+                          <li>
+                              <a href="{{ route('admin.attribute.index') }}"><i
+                                      class="bx bx-right-arrow-alt"></i>Attributes</a>
+                          </li>
+                          <li>
+                              <a href="{{ route('admin.attribute_value.index') }}"><i
+                                      class="bx bx-right-arrow-alt"></i>Attribute Values</a>
+                          </li>
+                      </ul>
                   </li>
-                  <li> <a href="ecommerce-add-new-products.html"><i class="bx bx-right-arrow-alt"></i>Add New
-                          Products</a>
-                  </li>
-                  <li> <a href="ecommerce-orders.html"><i class="bx bx-right-arrow-alt"></i>Orders</a>
-                  </li>
+
+
               </ul>
           </li>
 

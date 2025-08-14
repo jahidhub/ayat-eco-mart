@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AttributeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ColorController;
@@ -38,10 +39,17 @@ Route::group(['prefix' => 'admin'], function () {
         // SizeController
         Route::get('/manage/sizes', [SizeController::class, 'index'])->name('admin.products.size.index');
         Route::POST('/manage/sizes/add', [SizeController::class, 'store'])->name('admin.products.size.store');
-        
+
         // ColorController
         Route::get('/manage/colors', [ColorController::class, 'index'])->name('admin.manage.colors.index');
         Route::post('/manage/colors/add', [ColorController::class, 'store'])->name('admin.manage.colors.store');
+
+        // AttributeController
+        Route::get('/manage/attributes', [AttributeController::class, 'attributes_index'])->name('admin.attribute.index');
+        Route::post('/manage/attributes/add', [AttributeController::class, 'attributes_store'])->name('admin.attribute.store');
+        // AttributeController
+        Route::get('/manage/attribute-values', [AttributeController::class, 'attribute_values_index'])->name('admin.attribute_value.index');
+        Route::post('/manage/attribute-values/add', [AttributeController::class, 'attribute_values_store'])->name('admin.attribute_value.store');
     });
 });
 

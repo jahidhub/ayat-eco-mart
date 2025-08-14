@@ -1,0 +1,132 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Models\Attribute;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\AttributeValue;
+use App\Traits\ApiResponseTrait;
+
+class AttributeController extends Controller
+{
+    use ApiResponseTrait;
+    /**
+     * Display a listing of the resource.
+     */
+    public function attributes_index()
+    {
+
+        $attributes = Attribute::paginate();
+        return view('admin.pages.products.attribute.attribute', compact('attributes'));
+    }
+    public function attribute_values_index()
+    {
+        $attribute_values = AttributeValue::paginate();
+
+        // dd($attribute_values);
+
+        return view('admin.pages.products.attribute.attribute-value', compact('attribute_values'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function attributes_store(Request $request)
+    {
+        // dd($request->all());
+
+        if ($request->id > 0) {
+            $request->validate([
+                "name" => "required|string|max:255",
+                "slug" => "nullable|string|max:255"
+            ]);
+        } else if ($request->id == 0) {
+            $request->validate([
+                "name" => "required|string|max:255|unique:attributes,name",
+                "slug" => "nullable|string|max:255|unique:attributes,slug"
+            ]);
+        }
+
+
+
+        Attribute::updateOrCreate(
+            ['id' => $request->id],
+            [
+                "name" => $request->name,
+                "slug" => $request->slug ??  Str::slug($request->name),
+
+            ]
+        );
+
+        return $this->success(['reload' => true], 'Attribute saved successfully!');
+    }
+    public function attribute_values_store(Request $request)
+    {
+        dd($request->all());
+
+        if ($request->id > 0) {
+            $request->validate([
+                "value" => "nullable|string|max:255"
+            ]);
+        } else if ($request->id == 0) {
+            $request->validate([
+                "value" =>  "required|string|max:255|unique:attribute_values,value"
+            ]);
+        }
+
+
+
+        AttributeValue::updateOrCreate(
+            ['id' => $request->id],
+            [
+                "name" => $request->name,
+                "slug" => $request->slug ??  Str::slug($request->name),
+
+            ]
+        );
+
+        return $this->success(['reload' => true], 'Attribute saved successfully!');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+}
