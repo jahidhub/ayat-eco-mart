@@ -63,19 +63,19 @@
 
 
 
-          <li class="menu-label">Pages</li>
+          {{-- <li class="menu-label">Pages</li> --}}
 
-          <li>
+          {{-- <li>
               <a href="{{ route('admin.profile') }}">
                   <div class="parent-icon"><i class="bx bx-user-circle"></i>
                   </div>
                   <div class="menu-title">User Profile</div>
               </a>
-          </li>
+          </li> --}}
 
 
 
-          <li class="menu-label">Others</li>
+          {{-- <li class="menu-label">Others</li>
           <li>
               <a class="has-arrow" href="javascript:;">
                   <div class="parent-icon"><i class="bx bx-menu"></i>
@@ -95,7 +95,7 @@
                       </ul>
                   </li>
               </ul>
-          </li>
+          </li> --}}
 
       </ul>
       <!--end navigation-->

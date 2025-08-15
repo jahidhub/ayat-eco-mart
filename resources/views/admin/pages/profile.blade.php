@@ -47,7 +47,9 @@
                                                 alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
                                         </div>
                                         <div class="mt-3">
-                                            <h4>{{ Auth::user()->name }}</h4>
+                                            <h4>{{ Auth::user()->name }}(
+                                                <small>{{ Auth::user()->roles->first()->name }}</small> )</h4>
+
                                             <p class="text-secondary mb-1">{{ Auth::user()->phone ?? '' }} </p>
                                             <p class="text-muted font-size-sm">{{ Auth::user()->address ?? '' }}</p>
                                             <button class="btn btn-primary">Follow</button>
