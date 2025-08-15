@@ -47,8 +47,10 @@ Route::group(['prefix' => 'admin'], function () {
         // AttributeController
         Route::get('/manage/attributes', [AttributeController::class, 'attributes_index'])->name('admin.attribute.index');
         Route::post('/manage/attributes/add', [AttributeController::class, 'attributes_store'])->name('admin.attribute.store');
-        // AttributeController
+
+        // AttributeValueController
         Route::get('/manage/attribute-values', [AttributeController::class, 'attribute_values_index'])->name('admin.attribute_value.index');
+
         Route::post('/manage/attribute-values/add', [AttributeController::class, 'attribute_values_store'])->name('admin.attribute_value.store');
     });
 });

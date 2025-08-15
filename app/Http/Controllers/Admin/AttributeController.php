@@ -21,26 +21,7 @@ class AttributeController extends Controller
         $attributes = Attribute::paginate();
         return view('admin.pages.products.attribute.attribute', compact('attributes'));
     }
-    public function attribute_values_index()
-    {
-        $attribute_values = AttributeValue::paginate();
 
-        // dd($attribute_values);
-
-        return view('admin.pages.products.attribute.attribute-value', compact('attribute_values'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function attributes_store(Request $request)
     {
         // dd($request->all());
@@ -70,32 +51,47 @@ class AttributeController extends Controller
 
         return $this->success(['reload' => true], 'Attribute saved successfully!');
     }
+
+
+    // attribute_values
+
+    public function attribute_values_index()
+    {
+
+        $attribute_values = AttributeValue::with('attribute')->paginate();
+
+        // dd($attribute_values);
+
+        $attributes = Attribute::get();
+
+        return view('admin.pages.products.attribute.attribute-value', compact('attribute_values', 'attributes'));
+    }
+
     public function attribute_values_store(Request $request)
     {
-        dd($request->all());
+
+        $rules = [
+            "attr_id" => "required|integer",
+            "value" => "required|string|max:255|unique:attribute_values,attribute_value"
+        ];
 
         if ($request->id > 0) {
-            $request->validate([
-                "value" => "nullable|string|max:255"
-            ]);
-        } else if ($request->id == 0) {
-            $request->validate([
-                "value" =>  "required|string|max:255|unique:attribute_values,value"
-            ]);
+            $rules["attr_id"] = "nullable|integer";
+            $rules["value"] = "nullable|string|max:255";
         }
 
-
+        $request->validate($rules);
 
         AttributeValue::updateOrCreate(
             ['id' => $request->id],
             [
-                "name" => $request->name,
-                "slug" => $request->slug ??  Str::slug($request->name),
-
+                "attribute_id"    => $request->attr_id,
+                "attribute_value" => $request->value,
             ]
         );
 
-        return $this->success(['reload' => true], 'Attribute saved successfully!');
+
+        return $this->success(['reload' => true], 'Attribute value saved successfully!');
     }
 
     /**

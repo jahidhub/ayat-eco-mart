@@ -60,7 +60,7 @@
                                             @foreach ($attribute_values as $data)
                                                 <tr>
                                                     <td class="text-center fw-semibold text-dark">
-                                                        {{ $data->attribute_id }}
+                                                        {{ $data->attribute->name }}( {{ $data->attribute->slug }} )
                                                     </td>
                                                     <td class="text-center fw-semibold text-dark">
                                                         {{ $data->attribute_value }}
@@ -133,9 +133,14 @@
                             <div class="modal-body">
                                 <input type="hidden" name="id" id="id">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label fw-semibold">Attribute</label>
-                                    <select name="" id="attribute_name">
-                                        <option value="">atr</option>
+                                    <label for="attr_id" class="form-label fw-semibold">Attribute</label>
+                                    <select name="attr_id" id="attr_id" class="form-control">
+                                        <option value="">Selete a option</option>
+                                        @foreach ($attributes as $list)
+                                            <option value="{{ $list->id }}">{{ $list->name }} ( {{ $list->slug }}
+                                                )</option>
+                                        @endforeach
+
                                     </select>
                                     <div class="invalid-feedback">
                                         Please enter a Selete Attribute
@@ -178,7 +183,7 @@
     <script>
         function saveData(id, attr_name, value, title) {
             $('#id').val(id);
-            $('#name').val(attr_name);
+            $('#attr_id').val(attr_name);
             $('#value').val(value);
             $('#modal-title').text(title);
         }
