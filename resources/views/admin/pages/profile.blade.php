@@ -44,7 +44,7 @@
 
                                         <div class="mt-2">
                                             <img id="img_preview" src="{{ asset(Auth::user()->profile_img) }}"
-                                                alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                                                alt="{{ Auth::user()->roles->first()->name }}" class="rounded-circle p-1 bg-primary" width="110">
                                         </div>
                                         <div class="mt-3">
                                             <h4>{{ Auth::user()->name }}(
