@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AttributeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomeBannerController;
@@ -52,6 +53,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/manage/attribute-values', [AttributeController::class, 'attribute_values_index'])->name('admin.attribute_value.index');
 
         Route::post('/manage/attribute-values/add', [AttributeController::class, 'attribute_values_store'])->name('admin.attribute_value.store');
+        // AttributeValueController
+        Route::get('/manage/category', [CategoryController::class, 'category_index'])->name('admin.category.index');
+        Route::get('/manage/category', [CategoryController::class, 'category_store'])->name('admin.category.store');
+
+      
     });
 });
 

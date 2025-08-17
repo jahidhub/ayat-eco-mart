@@ -56,6 +56,21 @@
                           </li>
                       </ul>
                   </li>
+                  <li>
+                      <a href="javascript:;" class="has-arrow">
+                          <div class="menu-title">Category</div>
+                      </a>
+                      <ul>
+                          <li>
+                              <a href="{{ route('admin.category.index') }}"><i
+                                      class="bx bx-right-arrow-alt"></i>Category</a>
+                          </li>
+                          <li>
+                              <a href=""><i
+                                      class="bx bx-right-arrow-alt"></i>Category Attribute</a>
+                          </li>
+                      </ul>
+                  </li>
 
 
               </ul>
