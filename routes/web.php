@@ -57,6 +57,7 @@ Route::group(['prefix' => 'admin'], function () {
         // CategoryController
         Route::get('/manage/category', [CategoryController::class, 'category_index'])->name('admin.category.index');
         Route::post('/manage/category/add', [CategoryController::class, 'category_store'])->name('admin.category.store');
+        
     });
 });
 
