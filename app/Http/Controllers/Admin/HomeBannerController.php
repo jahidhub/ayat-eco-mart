@@ -6,6 +6,7 @@ use App\Models\HomeBanner;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
+use App\Traits\ImageUploadTrait;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
@@ -14,13 +15,14 @@ class HomeBannerController extends Controller
 {
 
     use ApiResponseTrait;
+    use ImageUploadTrait;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
 
-        $data = HomeBanner::get();
+        $data = HomeBanner::latest()->paginate(10);
 
         return view('admin.pages.homeBanner.home-banner', compact('data'));
     }
@@ -56,35 +58,11 @@ class HomeBannerController extends Controller
             return $this->error([], $validation->errors()->first(), 422);
         }
 
-        $db_image_path = null;
-        $image_save_path = "admin/assets/images/banner/";
-
-        // If image is uploaded
-        if ($request->hasFile('new_image')) {
-
-            $main_image = $request->file('new_image');
-
-            // Delete old image if updating
-            if ($request->id > 0) {
-                $image_db = HomeBanner::find($request->id);
-                if ($image_db && $image_db->image) {
-                    $image_path = public_path($image_save_path . $image_db->image);
-                    if (File::exists($image_path)) {
-                        File::delete($image_path);
-                    }
-                }
-            }
-
-            // Save new image
-            $image_name = 'banner-' . time() . '.' . $main_image->extension();
-            $db_image_path = $image_save_path . $image_name;
-            $main_image->move(public_path($image_save_path), $image_name);
-        } elseif ($request->id > 0) {
-            // Keep old image if no new image uploaded
-            $db_image_path = HomeBanner::where('id', $request->id)->value('image');
-        }
-
-
+        $fieldName = 'new_image';
+        $imagePath =  'admin/assets/images/banner/';
+        $model = new HomeBanner;
+        $prefix = 'banner';
+        $image = $this->handleImageUpload($request, $fieldName, $imagePath, $model, $prefix);
 
 
         // Create or Update record
@@ -93,7 +71,7 @@ class HomeBannerController extends Controller
             [
                 'content' => $request->content,
                 'link'    => $request->link,
-                'image'   => $db_image_path,
+                'image'   => $image,
             ]
         );
 

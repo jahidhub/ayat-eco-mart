@@ -209,6 +209,8 @@
 
 
  <script>
+ 
+
      function previewImage(e) {
          const preview = document.getElementById('img_preview');
          const file = e.target.files[0];

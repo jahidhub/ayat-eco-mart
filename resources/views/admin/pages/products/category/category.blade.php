@@ -65,8 +65,9 @@
                                                     <td class="text-center fw-semibold text-dark">
                                                         {{ $data->slug }}
                                                     </td>
-                                                    <td class="text-center fw-semibold text-dark">
-                                                        {{ $data->image }}
+                                                    <td class="text-center fw-semibold text-dark" style="width:200px;">
+                                                        <img src="{{ asset($data->image) }}" alt="{{ $data->name }}"
+                                                            class="img-fluid w-25 h-25">
                                                     </td>
                                                     <td class="text-center fw-semibold text-dark">
                                                         {{ $data->parent?->name ?? '-' }}
@@ -102,18 +103,9 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12 col-md-5">
-                                    <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
-                                        Showing {{ $categories->firstItem() }} to {{ $categories->lastItem() }} of
-                                        {{ $categories->total() }} entries
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-7">
-                                    <div class="dataTables_paginate paging_simple_numbers d-flex justify-content-end"
-                                        id="example_paginate">
-                                        {{ $categories->links() }}
-                                    </div>
-                                </div>
+
+                                {{ $categories->links() }}
+
                             </div>
 
                         </div>
@@ -140,9 +132,8 @@
                                 <input type="hidden" name="id" id="id">
                                 <div class="mb-3">
                                     <label for="name" class="form-label fw-semibold">Category Name</label>
-                                    <input type="text" id="name" name="name"
-                                        class="form-control form-control-lg" placeholder="e.g. Name"
-                                        aria-label="Product Attribute">
+                                    <input type="text" id="name" name="name" class="form-control form-control-lg"
+                                        placeholder="e.g. Name" aria-label="Product Attribute">
                                     <div class="invalid-feedback">
                                         Please enter a Category name.
                                     </div>
@@ -169,10 +160,25 @@
                                     </select>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="image" class="form-label fw-semibold">Category image</label>
-                                    <input type="file" id="image" name="image" class="form-control"
-                                        aria-label="image">
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold mb-2">Category Image</label>
+
+                                    <div class="position-relative rounded overflow-hidden shadow-sm"
+                                        style="height: 200px;">
+                                        <label for="new_image" class="w-100 h-100 m-0" style="cursor: pointer;">
+                                            <img id="img_preview"
+                                                src="{{ asset('admin/assets/images/image-upload.png') }}"
+                                                alt="Click to upload"
+                                                class="img-fluid w-100 h-100 object-fit-contain border rounded">
+                                        </label>
+
+                                        <input type="file" id="new_image" name="new_image"
+                                            class="form-control d-none" onchange="previewImage(event)">
+                                    </div>
+
+                                    <small class="text-muted d-block mt-2">
+                                        Click on the image to upload. Max size: 2MB. Formats: JPG, PNG, WEBP.
+                                    </small>
                                 </div>
 
                             </div>
@@ -198,17 +204,37 @@
 
 @section('customJs')
     <script>
+        var checkId;
+
         function saveData(id, name, slug, parent_category, image, title) {
+
+            // Show the previously hidden option (if any)
+            if (checkId) {
+                $('#parent_cat option[value="' + checkId + '"]').show();
+            }
+
+            // Store the new id
+            checkId = id;
+
+            // Fill modal fields
             $('#id').val(id);
             $('#name').val(name);
             $('#slug').val(slug);
-            $('#image').val(image);
             $('#parent_cat').val(parent_category);
             $('#modal-title').text(title);
-        }
 
-        document.getElementById('name').addEventListener('input', function() {
-            this.classList.toggle('is-invalid', !this.value.trim());
-        });
+            // Hide current category in dropdown
+            $('#parent_cat option[value="' + id + '"]').hide();
+
+            // Image preview
+            const defaultImage = "{{ asset('admin/assets/images/image-upload.png') }}";
+            const imagePath = image ? "{{ asset('') }}" + image : defaultImage;
+            document.getElementById('img_preview').src = imagePath;
+
+            // Validate name input on typing
+            document.getElementById('name').addEventListener('input', function() {
+                this.classList.toggle('is-invalid', !this.value.trim());
+            });
+        }
     </script>
 @endsection

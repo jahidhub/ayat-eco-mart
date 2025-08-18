@@ -7,17 +7,20 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Traits\ApiResponseTrait;
+use App\Traits\ImageUploadTrait;
+use Illuminate\Support\Facades\File;
 
 class CategoryController extends Controller
 {
     use ApiResponseTrait;
+    use ImageUploadTrait;
     /**
      * Display a listing of the resource.
      */
     public function category_index()
     {
 
-        $categories = Category::with('parent')->paginate();
+        $categories = Category::with('parent')->paginate(5);
 
         // dd($categories);
 
@@ -42,29 +45,25 @@ class CategoryController extends Controller
             'name'       => 'required|string|max:255',
             'slug'       => 'required|string|max:255|unique:categories,slug',
             'parent_cat' => 'nullable|exists:categories,id',
-            'image'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5125',
+            'new_image'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5125',
         ];
 
 
         if ($request->id > 0) {
-            $rules['name'] = 'nullable|string|max:255';
-            $rules['slug'] = 'nullable|string|max:255';
+            $rules['name'] = 'required|string|max:255';
+            $rules['slug'] = 'required|string|max:255|unique:categories,slug,' . $request->id;
         }
 
         $request->validate($rules);
 
 
-        $image_path = 'admin/assets/images/categories/';
-        $image_db = null;
+        // here use ImageUploadTrait 
 
-        if ($request->hasFile('image')) {
-            $main_image =  $request->file('image');
-            $image_name = time() . '.' . $main_image->extension();
-            // db save
-            $image_db = $image_path . $image_name;
-            // public save
-            $main_image->move(public_path($image_path), $image_name);
-        }
+        $fieldName = 'new_image';
+        $imagePath =  'admin/assets/images/categories/';
+        $model = new Category;
+        $prefix = 'cat';
+        $image = $this->handleImageUpload($request, $fieldName, $imagePath, $model, $prefix);
 
 
 
@@ -74,11 +73,11 @@ class CategoryController extends Controller
                 "name"    => $request->name,
                 "slug" => $request->slug ?? Str::slug($request->name),
                 "parent_category_id" => $request->parent_cat,
-                "image" => $image_db,
+                "image" => $image,
             ]
         );
 
-        return $this->success(['reload' => false], 'Category saved successfully',);
+        return $this->success(['reload' => true], 'Category saved successfully',);
     }
 
     /**
