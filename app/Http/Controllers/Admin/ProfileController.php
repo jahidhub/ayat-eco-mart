@@ -46,7 +46,7 @@ class ProfileController extends Controller
             'address' => 'nullable|string|max:255',
             'social_links.facebook' => 'nullable|url|max:255',
             'social_links.twitter' => 'nullable|url|max:255',
-            'profile_img' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_img' => 'nullable|image|mimes:jpeg,png,jpg ,webp|max:5125',
         ]);
 
         if ($validation->fails()) {

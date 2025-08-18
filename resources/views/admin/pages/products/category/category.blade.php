@@ -16,7 +16,7 @@
                 </div>
                 <div class="ms-auto">
                     <button type="button" class="btn btn-sm btn-dark" data-bs-toggle="modal"
-                        data-bs-target="#category_model" onclick="saveData('0', '', '', 'Add Category' )">Add New
+                        data-bs-target="#category_model" onclick="saveData('0', '', '','','','Add Category' )">Add New
                         category</button>
 
                 </div>
@@ -52,6 +52,8 @@
                                             <tr class="text-center">
                                                 <th>Name</th>
                                                 <th>Slug</th>
+                                                <th>Image</th>
+                                                <th>Parent Category</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -67,7 +69,7 @@
                                                         {{ $data->image }}
                                                     </td>
                                                     <td class="text-center fw-semibold text-dark">
-                                                        {{ $data->parent_category_id }}
+                                                        {{ $data->parent?->name ?? '-' }}
                                                     </td>
 
                                                     <td class="text-center">
@@ -76,8 +78,8 @@
                                                             <button
                                                                 onclick="saveData('{{ $data->id }}','{{ $data->name }}',
                                                                 '{{ $data->slug }}', 
-                                                                '{{ $data->image }}',
                                                                 '{{ $data->parent_category_id }}',
+                                                                '{{ $data->image }}',
                                                                 'Edit Product Category')"
                                                                 class="btn btn-sm btn-outline-dark" title="Edit"
                                                                 data-bs-toggle="modal" data-bs-target="#category_model">
@@ -121,7 +123,7 @@
 
             {{-- Model Popup --}}
 
-            <div class="modal fade" id="attribute_model" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+            <div class="modal fade" id="category_model" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
 
@@ -139,7 +141,7 @@
                                 <div class="mb-3">
                                     <label for="name" class="form-label fw-semibold">Category Name</label>
                                     <input type="text" id="name" name="name"
-                                        class="form-control form-control-lg" placeholder="e.g. Brand"
+                                        class="form-control form-control-lg" placeholder="e.g. Name"
                                         aria-label="Product Attribute">
                                     <div class="invalid-feedback">
                                         Please enter a Category name.
@@ -148,31 +150,30 @@
                                 <div class="mb-3">
                                     <label for="slug" class="form-label fw-semibold">Category Slug</label>
                                     <input type="text" id="slug" name="slug"
-                                        class="form-control form-control-lg" placeholder="e.g. brand"
+                                        class="form-control form-control-lg" placeholder="e.g. slug"
                                         aria-label="Attribute Slug">
                                     <div class="invalid-feedback">
                                         Please enter a Category slug.
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="image" class="form-label fw-semibold">Category image</label>
-                                    <input type="file" id="image" name="image"
-                                        class="form-control form-control-lg" aria-label="image">
-                                    <div class="invalid-feedback">
-                                        Please enter a Category image.
-                                    </div>
-                                </div>
+
                                 <div class="mb-3">
                                     <label for="parent_cat" class="form-label fw-semibold">Parent Category</label>
-                                    <select name="parent_cat" id="parent_cat">
+                                    <select name="parent_cat" id="parent_cat" class="form-control">
 
-                                        <option value="1">1</option>
-
+                                        <option value="">Selete parent Category</option>
+                                        @foreach ($categories as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
 
                                     </select>
                                 </div>
 
-
+                                <div class="mb-3">
+                                    <label for="image" class="form-label fw-semibold">Category image</label>
+                                    <input type="file" id="image" name="image" class="form-control"
+                                        aria-label="image">
+                                </div>
 
                             </div>
 
@@ -197,7 +198,7 @@
 
 @section('customJs')
     <script>
-        function saveData(id, name, slug, image, parent_category, title) {
+        function saveData(id, name, slug, parent_category, image, title) {
             $('#id').val(id);
             $('#name').val(name);
             $('#slug').val(slug);
