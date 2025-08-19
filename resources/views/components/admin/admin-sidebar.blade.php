@@ -41,6 +41,8 @@
                   </li>
                   <li> <a href="{{ route('admin.manage.colors.index') }}"><i class="bx bx-right-arrow-alt"></i>Color</a>
                   </li>
+                  <li> <a href="{{ route('admin.brand.index') }}"><i class="bx bx-right-arrow-alt"></i>Brand</a>
+                  </li>
                   <li>
                       <a href="javascript:;" class="has-arrow">
                           <div class="menu-title">Attributes</div>
@@ -66,12 +68,12 @@
                                       class="bx bx-right-arrow-alt"></i>Category</a>
                           </li>
                           <li>
-                              <a href=""><i
+                              <a href="{{ route('admin.category_attribute.index') }}"><i
                                       class="bx bx-right-arrow-alt"></i>Category Attribute</a>
                           </li>
                       </ul>
                   </li>
-
+                  
 
               </ul>
           </li>

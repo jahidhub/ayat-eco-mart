@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Category;
+use App\Models\Attribute;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\CategoryAttribute;
 use App\Traits\ApiResponseTrait;
 use App\Traits\ImageUploadTrait;
 use Illuminate\Support\Facades\File;
@@ -83,9 +85,38 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Category $category)
+    public function index_category_attribute()
     {
-        //
+        $items = CategoryAttribute::with('category', 'attribute')->latest()->paginate();
+
+        $categories = Category::get();
+        $attributes = Attribute::get();
+
+        return view('admin.pages.products.category.category-attribute', compact('items', 'categories', 'attributes'));
+    }
+    public function store_category_attribute(Request $request)
+    {
+
+        // dd($request->all());
+
+        $rules = [
+            'category_id'  => 'required|exists:categories,id',
+            'attribute_id' => 'required|exists:attributes,id',
+        ];
+
+
+        $request->validate($rules);
+
+
+        CategoryAttribute::updateOrCreate(
+            ['id' => $request->id],
+            [
+                "category_id"    => $request->category_id,
+                "attribute_id" => $request->attribute_id,
+            ]
+        );
+
+        return $this->success(['reload' => true], 'Category & Attribute saved successfully',);
     }
 
     /**

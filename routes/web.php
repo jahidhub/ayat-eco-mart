@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AttributeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -57,7 +58,14 @@ Route::group(['prefix' => 'admin'], function () {
         // CategoryController
         Route::get('/manage/category', [CategoryController::class, 'category_index'])->name('admin.category.index');
         Route::post('/manage/category/add', [CategoryController::class, 'category_store'])->name('admin.category.store');
-        
+
+        Route::get('/manage/category-attribute', [CategoryController::class, 'index_category_attribute'])->name('admin.category_attribute.index');
+
+        Route::post('/manage/category-attribute/add', [CategoryController::class, 'store_category_attribute'])->name('admin.category_attribute.store');
+
+        // BrandController
+        Route::get('/manage/brand', [BrandController::class, 'index'])->name('admin.brand.index');
+        Route::post('/manage/brand/add', [BrandController::class, 'store'])->name('admin.brand.store');
     });
 });
 
