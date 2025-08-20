@@ -1,0 +1,13 @@
+Name
+Slug
+Image
+Category
+• Product Attributes(Acc to category)
+I
+Brand
+Item Code(Model)
+Description
+Keywords
+Tax
+Product Images
+Product Attributes(Sizes,sku,mrp,price,qty ,len, breadth, height,weight and colors)

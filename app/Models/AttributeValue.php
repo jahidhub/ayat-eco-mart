@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class AttributeValue extends Model
 {
-    protected $guarded = [];
+    protected $guarded = ['attribute_id', 'attribute_value'];
 
 
     public function attribute()
     {
-        return $this->hasOne(Attribute::class, 'id', 'attribute_id');
+        return $this->belongsTo(Attribute::class, 'attribute_id', 'id');
     }
 }
