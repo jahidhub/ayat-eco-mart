@@ -46,7 +46,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table id="example" class="table table-hover table-bordered align-middle"
+                                    <table id="table" class="table table-hover table-bordered align-middle"
                                         style="width: 100%;">
                                         <thead class="table-light">
                                             <tr class="text-center">
@@ -55,7 +55,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($sizes as $size)
+                                            @forelse ($sizes as $size)
                                                 <tr>
                                                     <td class="text-center fw-semibold text-dark">{{ $size->size }}</td>
 
@@ -78,81 +78,86 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                                @empty
+                                                    <tr class="no-items text-center">
+                                                        <td class="py-4 colspanchange" colspan="2">Not found.</td>
+                                                    </tr>
+                                                @endforelse
 
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12 col-md-5">
-                                    <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
-                                        Showing {{ $sizes->firstItem() }} to {{ $sizes->lastItem() }} of
-                                        {{ $sizes->total() }} entries
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-                                <div class="col-sm-12 col-md-7">
-                                    <div class="dataTables_paginate paging_simple_numbers d-flex justify-content-end"
-                                        id="example_paginate">
-                                        {{ $sizes->links() }}
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-5">
+                                        <div class="dataTables_info" id="example_info" role="status" aria-live="polite">
+                                            Showing {{ $sizes->firstItem() }} to {{ $sizes->lastItem() }} of
+                                            {{ $sizes->total() }} entries
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 col-md-7">
+                                        <div class="dataTables_paginate paging_simple_numbers d-flex justify-content-end"
+                                            id="example_paginate">
+                                            {{ $sizes->links() }}
+                                        </div>
                                     </div>
                                 </div>
+
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Model Popup --}}
+
+                <div class="modal fade" id="size_model" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modal-title"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+
+                            <!-- Modal Body with Form -->
+                            <form id="form_submit" action="{{ route('admin.products.size.store') }}"
+                                enctype="multipart/form-data">
+
+
+                                @csrf
+                                <div class="modal-body">
+                                    <input type="hidden" name="id" id="id">
+                                    <div class="mb-3">
+                                        <label for="size" class="form-label fw-semibold">Product Size</label>
+                                        <input type="text" id="size" name="size"
+                                            class="form-control form-control-lg" placeholder="e.g. S, M, L, XL"
+                                            aria-label="Product Size">
+                                        <div class="invalid-feedback">
+                                            Please enter a product size.
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Modal Footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <div id="submitButtonWrapper">
+                                        <button type="submit" id="submitButton" class="btn btn-primary px-4">Save
+                                            Changes</button>
+                                    </div>
+
+                                </div>
+                            </form>
 
                         </div>
                     </div>
                 </div>
+
             </div>
-
-            {{-- Model Popup --}}
-
-            <div class="modal fade" id="size_model" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modal-title"></h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
-                        <!-- Modal Body with Form -->
-                        <form id="form_submit" action="{{ route('admin.products.size.store') }}"
-                            enctype="multipart/form-data">
-
-
-                            @csrf
-                            <div class="modal-body">
-                                <input type="hidden" name="id" id="id">
-                                <div class="mb-3">
-                                    <label for="size" class="form-label fw-semibold">Product Size</label>
-                                    <input type="text" id="size" name="size" class="form-control form-control-lg"
-                                        placeholder="e.g. S, M, L, XL" aria-label="Product Size">
-                                    <div class="invalid-feedback">
-                                        Please enter a product size.
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <!-- Modal Footer -->
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <div id="submitButtonWrapper">
-                                    <button type="submit" id="submitButton" class="btn btn-primary px-4">Save
-                                        Changes</button>
-                                </div>
-
-                            </div>
-                        </form>
-
-                    </div>
-                </div>
-            </div>
-
         </div>
-    </div>
-@endsection
+    @endsection
 
 @section('customJs')
     <script>

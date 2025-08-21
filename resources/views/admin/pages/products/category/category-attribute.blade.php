@@ -47,7 +47,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table id="example" class="table table-hover table-bordered align-middle"
+                                    <table id="table" class="table table-hover table-bordered align-middle"
                                         style="width: 100%;">
                                         <thead class="table-light">
                                             <tr class="text-center">
@@ -57,9 +57,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($items as $data)
+                                            @forelse ($items as $data)
                                                 <tr>
-                                                    <td class="text-center fw-semibold text-dark">{{ $data->category->name }}
+                                                    <td class="text-center fw-semibold text-dark">
+                                                        {{ $data->category->name }}
                                                     </td>
                                                     <td class="text-center fw-semibold text-dark">
                                                         {{ $data->attribute->name }}
@@ -86,7 +87,11 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr class="no-items text-center">
+                                                    <td class="py-4 colspanchange" colspan="3">Not found.</td>
+                                                </tr>
+                                            @endforelse
 
                                         </tbody>
                                     </table>

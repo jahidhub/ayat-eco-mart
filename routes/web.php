@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomeBannerController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Models\HomeBanner;
@@ -66,6 +67,12 @@ Route::group(['prefix' => 'admin'], function () {
         // BrandController
         Route::get('/manage/brand', [BrandController::class, 'index'])->name('admin.brand.index');
         Route::post('/manage/brand/add', [BrandController::class, 'store'])->name('admin.brand.store');
+
+
+        // ProductController
+        Route::get('/products', [ProductController::class, 'index'])->name('admin.product.index');
+        Route::get('/products/new-product', [ProductController::class, 'create'])->name('admin.product.create');
+        // Route::post('/product/store', [ProductController::class, 'store'])->name('admin.product.store');
     });
 });
 

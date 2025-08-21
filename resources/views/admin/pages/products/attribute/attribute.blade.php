@@ -46,7 +46,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <table id="example" class="table table-hover table-bordered align-middle"
+                                    <table id="table" class="table table-hover table-bordered align-middle"
                                         style="width: 100%;">
                                         <thead class="table-light">
                                             <tr class="text-center">
@@ -56,7 +56,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($attributes as $attribute)
+                                            @forelse ($attributes as $attribute)
                                                 <tr>
                                                     <td class="text-center fw-semibold text-dark">{{ $attribute->name }}
                                                     </td>
@@ -83,7 +83,13 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr class="no-items text-center">
+                                                    <td class="py-4 colspanchange" colspan="3">Not found.</td>
+                                                </tr>
+                                            @endforelse
+
+
 
                                         </tbody>
                                     </table>
@@ -128,8 +134,9 @@
                                 <input type="hidden" name="id" id="id">
                                 <div class="mb-3">
                                     <label for="name" class="form-label fw-semibold">Attribute Name</label>
-                                    <input type="text" id="name" name="name" class="form-control form-control-lg"
-                                        placeholder="e.g. Brand" aria-label="Product Attribute">
+                                    <input type="text" id="name" name="name"
+                                        class="form-control form-control-lg" placeholder="e.g. Brand"
+                                        aria-label="Product Attribute">
                                     <div class="invalid-feedback">
                                         Please enter a Attribute name.
                                     </div>

@@ -32,52 +32,64 @@
               <a href="javascript:;" class="has-arrow">
                   <div class="parent-icon"><i class='bx bx-cart'></i>
                   </div>
-                  <div class="menu-title">eCommerce</div>
+                  <div class="menu-title">Products</div>
               </a>
               <ul>
-                  <li> <a href="#"><i class="bx bx-right-arrow-alt"></i>Products</a>
+
+
+                  <li>
+                      <a href="{{ route('admin.product.index') }}"><i class="bx bx-right-arrow-alt"></i>
+                          All Products</a>
+                  </li>
+                  <li>
+                      <a href="{{ route('admin.product.create') }}"><i class="bx bx-right-arrow-alt"></i>Add New
+                          Product</a>
+                  </li>
+
+                  <li> <a href="{{ route('admin.brand.index') }}"><i class="bx bx-right-arrow-alt"></i>Brand</a>
                   </li>
                   <li> <a href="{{ route('admin.products.size.index') }}"><i class="bx bx-right-arrow-alt"></i>Size</a>
                   </li>
                   <li> <a href="{{ route('admin.manage.colors.index') }}"><i class="bx bx-right-arrow-alt"></i>Color</a>
                   </li>
-                  <li> <a href="{{ route('admin.brand.index') }}"><i class="bx bx-right-arrow-alt"></i>Brand</a>
-                  </li>
-                  <li>
-                      <a href="javascript:;" class="has-arrow">
-                          <div class="menu-title">Attributes</div>
-                      </a>
-                      <ul>
-                          <li>
-                              <a href="{{ route('admin.attribute.index') }}"><i
-                                      class="bx bx-right-arrow-alt"></i>Attributes</a>
-                          </li>
-                          <li>
-                              <a href="{{ route('admin.attribute_value.index') }}"><i
-                                      class="bx bx-right-arrow-alt"></i>Attribute Values</a>
-                          </li>
-                      </ul>
-                  </li>
-                  <li>
-                      <a href="javascript:;" class="has-arrow">
-                          <div class="menu-title">Category</div>
-                      </a>
-                      <ul>
-                          <li>
-                              <a href="{{ route('admin.category.index') }}"><i
-                                      class="bx bx-right-arrow-alt"></i>Category</a>
-                          </li>
-                          <li>
-                              <a href="{{ route('admin.category_attribute.index') }}"><i
-                                      class="bx bx-right-arrow-alt"></i>Category Attribute</a>
-                          </li>
-                      </ul>
-                  </li>
-                  
+
 
               </ul>
           </li>
+          <li>
+              <a href="javascript:;" class="has-arrow">
+                  <div class="parent-icon"><i class='bx bx-box'></i>
+                  </div>
+                  <div class="menu-title">Category</div>
+              </a>
+              <ul>
+                  <li>
+                      <a href="{{ route('admin.category.index') }}"><i class="bx bx-right-arrow-alt"></i>Category</a>
+                  </li>
+                  <li>
+                      <a href="{{ route('admin.category_attribute.index') }}"><i
+                              class="bx bx-right-arrow-alt"></i>Category Attribute</a>
+                  </li>
+              </ul>
+          </li>
 
+          <li>
+              <a href="javascript:;" class="has-arrow">
+                  <div class="parent-icon"><i class='bx bx-box'></i>
+                  </div>
+                  <div class="menu-title">Attributes</div>
+              </a>
+              <ul>
+                  <li>
+                      <a href="{{ route('admin.attribute.index') }}"><i
+                              class="bx bx-right-arrow-alt"></i>Attributes</a>
+                  </li>
+                  <li>
+                      <a href="{{ route('admin.attribute_value.index') }}"><i
+                              class="bx bx-right-arrow-alt"></i>Attribute Values</a>
+                  </li>
+              </ul>
+          </li>
 
 
           {{-- <li class="menu-label">Pages</li> --}}
