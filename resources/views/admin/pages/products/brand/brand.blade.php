@@ -89,7 +89,7 @@
                                                 </tr>
                                             @empty
                                                 <tr class="no-items text-center">
-                                                    <td class="py-4 colspanchange" colspan="3">Not found.</td>
+                                                    <td class="py-4 colspanchange" colspan="3">No data found</td>
                                                 </tr>
                                             @endforelse
 
@@ -147,6 +147,7 @@
 
                                         <input type="file" id="new_image" name="new_image"
                                             class="form-control d-none" onchange="previewImage(event)">
+                                        
                                     </div>
 
                                     <small class="text-muted d-block mt-2">
@@ -182,7 +183,7 @@
             $('#name').val(name);
             $('#modal-title').text(title);
 
-
+           
             const defaultImage = "{{ asset('admin/assets/images/image-upload.png') }}";
             const imagePath = image ? "{{ asset('') }}" + image : defaultImage;
             document.getElementById('img_preview').src = imagePath;

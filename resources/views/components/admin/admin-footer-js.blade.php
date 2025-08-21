@@ -209,7 +209,6 @@
 
 
  <script>
- 
 
      function previewImage(e) {
          const preview = document.getElementById('img_preview');

@@ -26,7 +26,7 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap5">
-                            <div class="row mb-4">
+                            {{-- <div class="row mb-4">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="dataTables_length" id="example_length"><label>Show <select
                                                 name="example_length" aria-controls="example"
@@ -42,7 +42,7 @@
                                                 class="form-control form-control-sm" placeholder=""
                                                 aria-controls="example"></label></div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row">
                                 <div class="col-sm-12">
                                     <table id="table" class="table table-hover table-bordered align-middle"
@@ -71,11 +71,11 @@
                                                     </th>
                                                     <td class="title column-title has-row-actions">
                                                         <strong>
-                                                            <a href="">test</a>
+                                                            <a href="">{{ $product->name }}</a>
                                                         </strong>
                                                         <div class="row-actions">
                                                             <span class="edit">
-                                                                <a href="">Edit</a>
+                                                                <a href="{{ route('admin.product.edit', $product->id) }}">Edit</a>
                                                                 |
                                                             </span>
                                                             <span class="view">
@@ -87,17 +87,19 @@
                                                             </span>
                                                         </div>
                                                     </td>
-                                                    <td>Image </td>
-                                                    <td>£price</td>
-                                                    <td>item_code </td>
+                                                    <td class="text-center fw-semibold text-dark" style="width:200px;">
+                                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
+                                                            class="img-fluid w-25 h-25">
+                                                    </td>
+                                                    {{-- <td>£price</td>
                                                     <td>category->name</td>
                                                     <td>brand->name</td>
 
-                                                    <td>stock_qty</td>
+                                                    <td>stock_qty</td> --}}
                                                 </tr>
                                             @empty
                                                 <tr class="no-items text-center">
-                                                    <td class="py-4 colspanchange" colspan="7">Not found.</td>
+                                                    <td class="py-4 colspanchange" colspan="">No data found</td>
                                                 </tr>
                                             @endforelse
                                         </tbody>

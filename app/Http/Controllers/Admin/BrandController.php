@@ -36,7 +36,7 @@ class BrandController extends Controller
     {
         $rules = [
             'name'       => 'required|string|max:255',
-            'new_image'  => 'required|image|mimes:jpg,jpeg,png,webp|max:5125',
+            'new_image'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5125',
         ];
 
         $request->validate($rules);

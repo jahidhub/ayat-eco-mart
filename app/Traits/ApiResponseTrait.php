@@ -12,7 +12,7 @@ trait ApiResponseTrait
      * @return \illuminate\Http\JsonResponse
      */
 
-    protected function success($data, string $message = null, int $code = 200)
+    protected function success($data, string $message = '', int $code = 200)
     {
 
         return response()->json([
@@ -21,7 +21,7 @@ trait ApiResponseTrait
             'data' => $data
         ], $code);
     }
-    protected function error($data, string $message = null, int $code)
+    protected function error($data, string $message = '', int $code)
     {
 
         return response()->json([

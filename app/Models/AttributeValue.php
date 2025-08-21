@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AttributeValue extends Model
 {
-    protected $guarded = ['attribute_id', 'attribute_value'];
+    protected $fillable = ['attribute_id', 'attribute_value'];
 
 
     public function attribute()

@@ -85,7 +85,7 @@
                                                 </tr>
                                             @empty
                                                 <tr class="no-items text-center">
-                                                    <td class="py-4 colspanchange" colspan="3">Not found.</td>
+                                                    <td class="py-4 colspanchange" colspan="3">No data found</td>
                                                 </tr>
                                             @endforelse
 

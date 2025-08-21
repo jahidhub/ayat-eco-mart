@@ -24,7 +24,7 @@
             <hr>
 
             <!-- Add Product Form -->
-            <form id="#form_submit" action="{{ route('admin.product.store') }}" method="post"
+            <form id="product_submit" action="{{ route('admin.product.update') }}" method="post"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="row">
@@ -37,7 +37,7 @@
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Product Name</label>
                                     <input name="name" id="name" type="text" class="form-control"
-                                        placeholder="Enter product name">
+                                        placeholder="Enter product name" value="{{ $product->name }}">
                                 </div>
 
                                 <!-- Slug -->
@@ -46,7 +46,7 @@
                                         <span class="input-group-text">{{ url('/') }}
                                         </span>
                                         <input name="slug" id="slug" type="text" class="form-control"
-                                            placeholder="slug">
+                                            placeholder="slug" value="{{ $product->slug }}">
                                     </div>
                                 </div>
                             </div>
@@ -58,7 +58,7 @@
                             <div class="card-body">
                                 <label class="form-label fw-bold">Description</label>
                                 <textarea name="description" id="description" rows="6" class="form-control"
-                                    placeholder="Enter product description"></textarea>
+                                    placeholder="Enter product description">{{ $product->description }}</textarea>
                             </div>
                         </div>
 
@@ -143,10 +143,9 @@
                         <!-- Publish -->
                         <div class="card mb-4">
                             <div class="card-header fw-bold">Publish</div>
-
-                            <button type="submit" id="submitButton"
-                                class="w-100 text-center btn btn-primary px-4">Publish</button>
-
+                            <div class="card-body">
+                                <button type="submit" id="savebutton" class="btn btn-primary w-100">Publish</button>
+                            </div>
                         </div>
 
                         <!-- Product Image -->
@@ -173,15 +172,10 @@
                         <div class="card mb-4">
                             <div class="card-header fw-bold">Categories</div>
                             <div class="card-body">
-
-                                <select name="category" id="category" class="form-control">
-
-                                    <option value="">Selete Option</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                    @endforeach
-
-                                </select>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="cat1">
+                                    <label class="form-check-label" for="cat1">Category One</label>
+                                </div>
 
                             </div>
                         </div>
@@ -190,14 +184,10 @@
                         <div class="card mb-4">
                             <div class="card-header fw-bold">Brands</div>
                             <div class="card-body">
-                                <select name="category" id="category" class="form-control">
-
-                                    <option value="">Selete Option</option>
-                                    @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                    @endforeach
-
-                                </select>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="brnd1">
+                                    <label class="form-check-label" for="brnd1">Brands One</label>
+                                </div>
 
                             </div>
                         </div>
@@ -221,33 +211,94 @@
 @section('customJs')
     <script>
         $(document).ready(function() {
-            $('#category').change(function() {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 1000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
 
-                var url = "{{ route('getAttribute') }}";
-                var category_id = $(this).val();
+            $('#product_submit').on('submit', function(e) {
+
+                var form_data = new FormData(this);
+                var url = $(this).attr('action');
 
                 $.ajax({
                     url: url,
                     type: "POST",
-                    data: {
-                        category_id: category_id,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    dataType: "json",
+                    data: form_data,
+                    contentType: false,
+                    processData: false,
                     success: function(response) {
-                        if (response.status == 200) {
-                            alert('Successfully');
-                            console.log(response.data); // example: print attributes
+
+                        if (response.status === true) {
+                            Toast.fire({
+                                icon: "success",
+                                title: response.message
+                            });
+
                         } else {
-                            alert(response.message);
+                            Toast.fire({
+                                icon: "error",
+                                title: response.message
+                            });
                         }
+
                     },
                     error: function(xhr) {
-                        console.log(xhr.responseText);
-                        alert('Something went wrong!');
+                        console.log(xhr);
+                        let message = 'An unexpected error occurred.';
+                        if (xhr.responseJSON) {
+                            if (xhr.responseJSON.message) {
+                                message = xhr.responseJSON.message;
+                            } else if (xhr.responseJSON.errors) {
+                                const firstError = Object.values(xhr.responseJSON.errors)[0][0];
+                                message = firstError;
+                            }
+                        }
+
+                        Toast.fire({
+                            icon: "error",
+                            title: message
+                        });
+                        console.error(xhr.responseText);
                     }
                 });
             });
+        });
+    </script>
+
+    <script>
+        function previewImage(e) {
+            const preview = document.getElementById('img_preview');
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type))
+                return alert('Only JPG, PNG, WEBP formats are allowed.');
+
+            if (file.size > 2 * 1024 * 1024)
+                return alert('Max file size is 2MB.');
+
+            preview.src = URL.createObjectURL(file);
+        }
+    </script>
+
+    <script>
+        document.getElementById('name').addEventListener('input', function() {
+            let name = this.value;
+            let slug = name
+                .toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9\s-]/g, '') // remove special chars
+                .replace(/\s+/g, '-') // spaces to dashes
+                .replace(/-+/g, '-'); // collapse multiple dashes
+            document.getElementById('slug').value = slug;
         });
     </script>
 @endsection
