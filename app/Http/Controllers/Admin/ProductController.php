@@ -127,7 +127,7 @@ class ProductController extends Controller
     {
         $cat_id = $request->category_id;
 
-        $data = CategoryAttribute::where('id', $cat_id);
+        $data = CategoryAttribute::where('category_id', $cat_id)->with('attribute.values')->get();
 
         dd($data);
     }
