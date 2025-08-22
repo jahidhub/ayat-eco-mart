@@ -176,10 +176,22 @@
 
                                 <select name="category" id="category" class="form-control">
 
-                                    <option value="">Selete Option</option>
+                                    <option value="">Selete category</option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
+
+                                </select>
+
+                            </div>
+                            <div class="card-header fw-bold">Category related attributes</div>
+                            <div class="card-body">
+
+                                <select name="attributes" id="attributes" class="form-control multicheck" multiple>
+
+                                    <option value="alice">Alice</option>
+                                    <option value="bob">Bob</option>
+                                    <option value="carol">Carol</option>
 
                                 </select>
 
@@ -235,9 +247,11 @@
                     },
                     dataType: "json",
                     success: function(response) {
-                        if (response.status == 200) {
-                            alert('Successfully');
-                            console.log(response.data); // example: print attributes
+                        if (response.status == true) {
+
+                            console.log(response.data.attributes.name);
+
+
                         } else {
                             alert(response.message);
                         }
@@ -248,6 +262,13 @@
                     }
                 });
             });
+        });
+    </script>
+
+
+    <script type="text/javascript">
+        $(function() {
+            $('.multicheck').multiSelect();
         });
     </script>
 @endsection

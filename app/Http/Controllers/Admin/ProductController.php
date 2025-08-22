@@ -125,10 +125,23 @@ class ProductController extends Controller
      */
     public function getAttribute(Request $request)
     {
-        $cat_id = $request->category_id;
+        $request->validate([
+            'category_id' => 'required|exists:categories,id'
+        ]);
 
-        $data = CategoryAttribute::where('category_id', $cat_id)->with('attribute.values')->get();
+        $categoryId = $request->category_id;
 
-        dd($data);
+        $catAttrs = CategoryAttribute::where('category_id', $categoryId)
+            ->with('attribute.values')
+            ->get();
+
+        if ($catAttrs->isEmpty()) {
+            return $this->error([], 'No attributes found for this category.', 404);
+        }
+
+        return $this->success(
+            ['attributes' => $catAttrs],
+            'Category attributes retrieved successfully'
+        );
     }
 }

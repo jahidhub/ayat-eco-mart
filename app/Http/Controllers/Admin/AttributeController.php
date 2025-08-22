@@ -29,7 +29,7 @@ class AttributeController extends Controller
         if ($request->id > 0) {
             $request->validate([
                 "name" => "required|string|max:255",
-                "slug" => "nullable|string|max:255"
+                "slug" => "nullable|string|max:255|unique:attributes,slug,$request->id,id"
             ]);
         } else if ($request->id == 0) {
             $request->validate([
