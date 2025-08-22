@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('size_id')->nullable();
             $table->unsignedBigInteger('color_id')->nullable();
-            $table->string('image')->nullable();
             $table->string('sku')->unique();
             $table->decimal('mrp', 10, 2)->nullable();
             $table->decimal('price', 10, 2)->nullable();

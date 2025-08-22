@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProductVariant extends Model
+class ProductVariantImage extends Model
 {
     protected $guarded = [];
 }

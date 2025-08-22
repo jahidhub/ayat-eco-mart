@@ -66,75 +66,82 @@
                         <div class="card">
                             <div class="card-header bg-light fw-bold">Product Data</div>
                             <div class="card-body">
-                                <ul class="nav nav-tabs" id="productTabs" role="tablist">
-                                    <li class="nav-item">
-                                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#general"
-                                            type="button">General</button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#inventory"
-                                            type="button">Inventory</button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#shipping"
-                                            type="button">Shipping</button>
-                                    </li>
-                                </ul>
-                                <div class="tab-content mt-3">
-
-                                    <!-- General Tab -->
-                                    <div class="tab-pane fade show active" id="general">
-                                        <div class="mb-3">
-                                            <label class="form-label">Regular Price</label>
-                                            <input type="number" id="mrp" name="mrp" class="form-control"
-                                                placeholder="0.00">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Sale Price</label>
-                                            <input type="number" id="price" name="price" class="form-control"
-                                                placeholder="0.00">
+                                <div class="row">
+                                    <div class="col-lg-2">
+                                        <!-- Vertical Nav Tabs -->
+                                        <div class="nav flex-column nav-pills" id="productTabs" role="tablist"
+                                            aria-orientation="vertical">
+                                            <button class="nav-link active text-start" id="general-tab" data-bs-toggle="pill"
+                                                data-bs-target="#general" type="button" role="tab">General</button>
+                                            <button class="nav-link text-start" id="inventory-tab" data-bs-toggle="pill"
+                                                data-bs-target="#inventory" type="button" role="tab">Inventory</button>
+                                            <button class="nav-link text-start" id="shipping-tab" data-bs-toggle="pill"
+                                                data-bs-target="#shipping" type="button" role="tab">Shipping</button>
                                         </div>
                                     </div>
 
-                                    <!-- Inventory Tab -->
-                                    <div class="tab-pane fade" id="inventory">
-                                        <div class="mb-3">
-                                            <label class="form-label">SKU</label>
-                                            <input type="text" id="sku" name="sku" class="form-control"
-                                                placeholder="ABC123">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Stock Quantity</label>
-                                            <input type="number" id="qty" name="qty" class="form-control"
-                                                placeholder="10">
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="manageStock">
-                                            <label class="form-check-label" for="manageStock">Manage stock?</label>
-                                        </div>
-                                    </div>
+                                    <div class="col-lg-10">
+                                        <!-- Vertical Tab Content -->
+                                        <div class="tab-content bg-light p-3" id="productTabsContent">
+                                            <!-- General Tab -->
+                                            <div class="tab-pane fade show active" id="general" role="tabpanel"
+                                                aria-labelledby="general-tab">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Regular Price</label>
+                                                    <input type="number" id="mrp" name="mrp" class="form-control"
+                                                        placeholder="0.00">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Sale Price</label>
+                                                    <input type="number" id="price" name="price" class="form-control"
+                                                        placeholder="0.00">
+                                                </div>
+                                            </div>
 
-                                    <!-- Shipping Tab -->
-                                    <div class="tab-pane fade" id="shipping">
-                                        <div class="mb-3">
-                                            <label class="form-label">Weight (kg)</label>
-                                            <input type="number" id="weight" name="weight" class="form-control"
-                                                step="0.01" placeholder="0.00">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Dimensions (L × W × H)</label>
-                                            <div class="d-flex gap-2">
-                                                <input type="number" id="length" name="length" class="form-control"
-                                                    placeholder="Length">
-                                                <input type="number" id="width" name="width" class="form-control"
-                                                    placeholder="Width">
-                                                <input type="number" id="height" name="height" class="form-control"
-                                                    placeholder="Height">
+                                            <!-- Inventory Tab -->
+                                            <div class="tab-pane fade" id="inventory" role="tabpanel"
+                                                aria-labelledby="inventory-tab">
+                                                <div class="mb-3">
+                                                    <label class="form-label">SKU</label>
+                                                    <input type="text" id="sku" name="sku"
+                                                        class="form-control" placeholder="ABC123">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Stock Quantity</label>
+                                                    <input type="number" id="qty" name="qty"
+                                                        class="form-control" placeholder="10">
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="manageStock">
+                                                    <label class="form-check-label" for="manageStock">Manage
+                                                        stock?</label>
+                                                </div>
+                                            </div>
+
+                                            <!-- Shipping Tab -->
+                                            <div class="tab-pane fade" id="shipping" role="tabpanel"
+                                                aria-labelledby="shipping-tab">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Weight (kg)</label>
+                                                    <input type="number" id="weight" name="weight"
+                                                        class="form-control" step="0.01" placeholder="0.00">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Dimensions (L × W × H)</label>
+                                                    <div class="d-flex gap-2">
+                                                        <input type="number" id="length" name="length"
+                                                            class="form-control" placeholder="Length">
+                                                        <input type="number" id="width" name="width"
+                                                            class="form-control" placeholder="Width">
+                                                        <input type="number" id="height" name="height"
+                                                            class="form-control" placeholder="Height">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
+
                             </div>
                         </div>
 
@@ -187,13 +194,13 @@
                             <div class="card-header fw-bold">Category related attributes</div>
                             <div class="card-body">
 
-                                <select name="attributes" id="attributes" class="form-control multicheck" multiple>
+                                {{-- <select name="attributes" id="attributes" class="form-control multicheck" multiple>
+                                </select> --}}
 
-                                    <option value="alice">Alice</option>
-                                    <option value="bob">Bob</option>
-                                    <option value="carol">Carol</option>
+                                <div id="attribute-checkboxes" class="form-control"
+                                    style="height:auto; min-height:50px; overflow-y:auto;">
 
-                                </select>
+                                </div>
 
                             </div>
                         </div>
@@ -237,6 +244,12 @@
 
                 var url = "{{ route('getAttribute') }}";
                 var category_id = $(this).val();
+                console.log(category_id);
+                var container = $('#attribute-checkboxes');
+                container.empty();
+                if (!category_id) return;
+
+
 
                 $.ajax({
                     url: url,
@@ -249,11 +262,60 @@
                     success: function(response) {
                         if (response.status == true) {
 
-                            console.log(response.data.attributes.name);
+                            // console.log(response.data);
 
+                            if (response.data.attributes) {
+                                var
+                                    usedAttributes = {};
+                                $.each(response.data.attributes, function(key, value) {
+                                    var attribute = value.attribute;
+                                    if (!attribute || !attribute.values) return;
+
+                                    // Skip if attribute already added
+                                    if (usedAttributes[attribute.name]) return;
+                                    usedAttributes[attribute.name] = true;
+
+                                    // Attribute title
+                                    var section = $('<div>').css('margin-bottom',
+                                        '10px');
+                                    var title = $('<strong>').text(attribute.name);
+                                    section.append(title);
+
+                                    // Track used values to prevent duplicate checkboxes
+                                    var usedValues = {};
+
+                                    $.each(attribute.values, function(i, val) {
+                                        if (usedValues[val.attribute_value])
+                                            return;
+                                        usedValues[val.attribute_value] = true;
+
+                                        var wrapper = $('<div>').css(
+                                            'margin-left',
+                                            '15px');
+                                        var checkbox = $('<input>', {
+                                            type: 'checkbox',
+                                            name: 'attributes[]',
+                                            id: 'attr_' + val.id,
+                                            value: val.id
+                                        });
+                                        var label = $('<label>', {
+                                            for: 'attr_' + val.id,
+                                            text: ' ' + val
+                                                .attribute_value,
+                                            style: 'margin-left:5px;'
+                                        });
+                                        wrapper.append(checkbox).append(label);
+                                        section.append(wrapper);
+                                    });
+                                    container.append(section);
+                                });
+                            } else {
+
+                                container.html('<p>No attributes found</p>');
+                            }
 
                         } else {
-                            alert(response.message);
+                            container.html('<p>No attributes found</p>');
                         }
                     },
                     error: function(xhr) {
@@ -262,13 +324,7 @@
                     }
                 });
             });
-        });
-    </script>
 
-
-    <script type="text/javascript">
-        $(function() {
-            $('.multicheck').multiSelect();
         });
     </script>
 @endsection
