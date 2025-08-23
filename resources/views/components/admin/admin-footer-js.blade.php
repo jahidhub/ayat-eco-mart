@@ -92,8 +92,7 @@
                              }
                          }, 1000);
 
-
-
+                         $('#form_submit')[0].reset();
 
                      } else {
                          Toast.fire({
@@ -172,6 +171,8 @@
                                  }, 1000);
                              }
 
+
+
                          } else {
                              Toast.fire({
                                  icon: "error",
@@ -208,10 +209,20 @@
 
 
 
-
  <script>
+     window.onload = function() {
+         input_reset();
+     };
 
+     function input_reset() {
+         document.getElementById("feature_image").value = "";
+        //  console.log("File input reset after reload");
+     }
+ </script>
+ <script>
      function previewImage(e) {
+
+
          const preview = document.getElementById('img_preview');
          const file = e.target.files[0];
          if (!file) return;
@@ -219,8 +230,8 @@
          if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type))
              return alert('Only JPG, PNG, WEBP formats are allowed.');
 
-         if (file.size > 2 * 1024 * 1024)
-             return alert('Max file size is 2MB.');
+         //  if (file.size > 5 * 1024 * 1024)
+         //      return alert('Max file size is 2MB.');
 
          preview.src = URL.createObjectURL(file);
      }
@@ -232,9 +243,9 @@
          let slug = name
              .toLowerCase()
              .trim()
-             .replace(/[^a-z0-9\s-]/g, '') // remove special chars
-             .replace(/\s+/g, '-') // spaces to dashes
-             .replace(/-+/g, '-'); // collapse multiple dashes
+             .replace(/[^a-z0-9\s-]/g, '')
+             .replace(/\s+/g, '-')
+             .replace(/-+/g, '-');
          document.getElementById('slug').value = slug;
      });
  </script>

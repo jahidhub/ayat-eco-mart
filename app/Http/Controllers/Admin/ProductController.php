@@ -36,8 +36,6 @@ class ProductController extends Controller
         $categories = Category::get();
         $brands = Brand::get();
 
-
-
         return view('admin.pages.products.product.create', compact('categories', 'brands'));
     }
 
@@ -136,7 +134,7 @@ class ProductController extends Controller
             ->get();
 
         if ($catAttrs->isEmpty()) {
-            return $this->error([], 'No attributes found for this category.', 404);
+            return $this->error([], 'No attributes found', 404);
         }
 
         return $this->success(

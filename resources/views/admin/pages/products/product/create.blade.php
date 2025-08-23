@@ -71,8 +71,9 @@
                                         <!-- Vertical Nav Tabs -->
                                         <div class="nav flex-column nav-pills" id="productTabs" role="tablist"
                                             aria-orientation="vertical">
-                                            <button class="nav-link active text-start" id="general-tab" data-bs-toggle="pill"
-                                                data-bs-target="#general" type="button" role="tab">General</button>
+                                            <button class="nav-link active text-start" id="general-tab"
+                                                data-bs-toggle="pill" data-bs-target="#general" type="button"
+                                                role="tab">General</button>
                                             <button class="nav-link text-start" id="inventory-tab" data-bs-toggle="pill"
                                                 data-bs-target="#inventory" type="button" role="tab">Inventory</button>
                                             <button class="nav-link text-start" id="shipping-tab" data-bs-toggle="pill"
@@ -160,20 +161,15 @@
                         <div class="mb-4">
                             <label class="card-header fw-bold">Product Image</label>
 
-                            <div class="position-relative rounded overflow-hidden shadow-sm" style="height: 200px;">
-                                <label for="new_image" class="w-100 h-100 m-0" style="cursor: pointer;">
-                                    <img id="img_preview" src="{{ asset('admin/assets/images/image-upload.png') }}"
-                                        alt="Click to upload"
-                                        class="img-fluid w-100 h-100 object-fit-contain border rounded">
-                                </label>
+                            <div class="position-relative rounded overflow-hidden text-center">
 
-                                <input type="file" id="new_image" name="new_image" class="form-control d-none"
+                                <input type="file" id="feature_image" name="feature_image" class="form-control"
                                     onchange="previewImage(event)">
-                            </div>
 
-                            <small class="text-muted d-block mt-2">
-                                Click on the image to upload. Max size: 5MB. Formats: JPG, PNG, WEBP.
-                            </small>
+                                <img id="img_preview" src=""
+                                    class="img-fluid w-50 h-50 object-fit-contain text-center">
+
+                            </div>
                         </div>
 
                         <!-- Categories -->
@@ -240,16 +236,13 @@
 @section('customJs')
     <script>
         $(document).ready(function() {
-            $('#category').change(function() {
-
-                var url = "{{ route('getAttribute') }}";
-                var category_id = $(this).val();
-                console.log(category_id);
-                var container = $('#attribute-checkboxes');
+            $('#category').on('change', function() {
+                const url = "{{ route('getAttribute') }}";
+                const category_id = $(this).val();
+                const container = $('#attribute-checkboxes');
                 container.empty();
+
                 if (!category_id) return;
-
-
 
                 $.ajax({
                     url: url,
@@ -260,71 +253,72 @@
                     },
                     dataType: "json",
                     success: function(response) {
-                        if (response.status == true) {
+                        if (response.status && response.data?.attributes) {
+                            const usedAttributes = {};
 
-                            // console.log(response.data);
+                            $.each(response.data.attributes, function(key, value) {
+                                const attribute = value.attribute;
+                                if (!attribute || !Array.isArray(attribute.values) ||
+                                    attribute.values.length === 0) {
+                                    container.html(
+                                        '<p class="text-muted">No attributes found</p>'
+                                    );
+                                    return;
+                                }
 
-                            if (response.data.attributes) {
-                                var
-                                    usedAttributes = {};
-                                $.each(response.data.attributes, function(key, value) {
-                                    var attribute = value.attribute;
-                                    if (!attribute || !attribute.values) return;
+                                // Skip duplicate attributes
+                                if (usedAttributes[attribute.name]) return;
+                                usedAttributes[attribute.name] = true;
 
-                                    // Skip if attribute already added
-                                    if (usedAttributes[attribute.name]) return;
-                                    usedAttributes[attribute.name] = true;
-
-                                    // Attribute title
-                                    var section = $('<div>').css('margin-bottom',
-                                        '10px');
-                                    var title = $('<strong>').text(attribute.name);
-                                    section.append(title);
-
-                                    // Track used values to prevent duplicate checkboxes
-                                    var usedValues = {};
-
-                                    $.each(attribute.values, function(i, val) {
-                                        if (usedValues[val.attribute_value])
-                                            return;
-                                        usedValues[val.attribute_value] = true;
-
-                                        var wrapper = $('<div>').css(
-                                            'margin-left',
-                                            '15px');
-                                        var checkbox = $('<input>', {
-                                            type: 'checkbox',
-                                            name: 'attributes[]',
-                                            id: 'attr_' + val.id,
-                                            value: val.id
-                                        });
-                                        var label = $('<label>', {
-                                            for: 'attr_' + val.id,
-                                            text: ' ' + val
-                                                .attribute_value,
-                                            style: 'margin-left:5px;'
-                                        });
-                                        wrapper.append(checkbox).append(label);
-                                        section.append(wrapper);
-                                    });
-                                    container.append(section);
+                                // Section wrapper
+                                const section = $('<div>', {
+                                    class: 'mb-3'
                                 });
-                            } else {
+                                section.append($('<strong>').text(attribute.name));
 
-                                container.html('<p>No attributes found</p>');
-                            }
+                                const usedValues = {};
 
+                                $.each(attribute.values, function(i, val) {
+                                    if (!val.attribute_value || usedValues[val
+                                            .attribute_value]) return;
+                                    usedValues[val.attribute_value] = true;
+
+                                    const wrapper = $('<div>', {
+                                        class: 'form-check ms-3'
+                                    });
+                                    const checkbox = $('<input>', {
+                                        type: 'checkbox',
+                                        class: 'form-check-input',
+                                        name: 'attributes[]',
+                                        id: 'attr_' + val.id,
+                                        value: val.id
+                                    });
+                                    const label = $('<label>', {
+                                        class: 'form-check-label',
+                                        for: 'attr_' + val.id,
+                                        text: val.attribute_value
+                                    });
+
+                                    wrapper.append(checkbox, label);
+                                    section.append(wrapper);
+                                });
+
+                                container.append(section);
+                            });
                         } else {
-                            container.html('<p>No attributes found</p>');
+                            container.html(
+                                '<span class="text-muted">No attributes found</span>');
                         }
                     },
                     error: function(xhr) {
-                        console.log(xhr.responseText);
-                        alert('Something went wrong!');
+
+                        var mesg = xhr.responseJSON.message;
+                        container.html(
+                            '<span class="text-muted">' + mesg + '</span>'
+                        );
                     }
                 });
             });
-
         });
     </script>
 @endsection
