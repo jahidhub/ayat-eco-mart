@@ -78,11 +78,13 @@
                                                 data-bs-target="#inventory" type="button" role="tab">Inventory</button>
                                             <button class="nav-link text-start" id="shipping-tab" data-bs-toggle="pill"
                                                 data-bs-target="#shipping" type="button" role="tab">Shipping</button>
+                                            <button class="nav-link text-start" id="shipping-tab" data-bs-toggle="pill"
+                                                data-bs-target="#valiations" type="button"
+                                                role="tab">Valiations</button>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-10">
-                                        <!-- Vertical Tab Content -->
                                         <div class="tab-content bg-light p-3" id="productTabsContent">
                                             <!-- General Tab -->
                                             <div class="tab-pane fade show active" id="general" role="tabpanel"
@@ -94,8 +96,8 @@
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Sale Price</label>
-                                                    <input type="number" id="price" name="price" class="form-control"
-                                                        placeholder="0.00">
+                                                    <input type="number" id="price" name="price"
+                                                        class="form-control" placeholder="0.00">
                                                 </div>
                                             </div>
 
@@ -138,6 +140,98 @@
                                                             class="form-control" placeholder="Height">
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <!--  valiations -->
+                                            <div class="tab-pane fade" id="valiations" role="tabpanel"
+                                                aria-labelledby="shipping-tab">
+                                                <div class="container my-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">Product Variations</h5>
+    </div>
+    <div class="card-body">
+      <form>
+        <div class="row g-3">
+          <!-- Size -->
+          <div class="col-md-3">
+            <label for="size_id" class="form-label">Size</label>
+            <select id="size_id" name="size_id" class="form-select">
+              <option value="">Select Size</option>
+              <option value="1">Small</option>
+              <option value="2">Medium</option>
+              <option value="3">Large</option>
+            </select>
+          </div>
+
+          <!-- Color -->
+          <div class="col-md-3">
+            <label for="color_id" class="form-label">Color</label>
+            <select id="color_id" name="color_id" class="form-select">
+              <option value="">Select Color</option>
+              <option value="1">Red</option>
+              <option value="2">Blue</option>
+              <option value="3">Green</option>
+            </select>
+          </div>
+
+          <!-- Image -->
+          <div class="col-md-3">
+            <label for="image" class="form-label">Image</label>
+            <input type="file" class="form-control" id="image" name="image">
+          </div>
+
+          <!-- SKU -->
+          <div class="col-md-3">
+            <label for="sku" class="form-label">SKU</label>
+            <input type="text" class="form-control" id="sku" name="sku" placeholder="Enter SKU">
+          </div>
+
+          <!-- MRP -->
+          <div class="col-md-3">
+            <label for="mrp" class="form-label">MRP (£)</label>
+            <input type="number" class="form-control" id="mrp" name="mrp" placeholder="0.00">
+          </div>
+
+          <!-- Price -->
+          <div class="col-md-3">
+            <label for="price" class="form-label">Price (£)</label>
+            <input type="number" class="form-control" id="price" name="price" placeholder="0.00">
+          </div>
+
+          <!-- Quantity -->
+          <div class="col-md-3">
+            <label for="qty" class="form-label">Quantity</label>
+            <input type="number" class="form-control" id="qty" name="qty" placeholder="0">
+          </div>
+
+          <!-- Length -->
+          <div class="col-md-3">
+            <label for="length" class="form-label">Length (cm)</label>
+            <input type="number" class="form-control" id="length" name="length" placeholder="0">
+          </div>
+
+          <!-- Height -->
+          <div class="col-md-3">
+            <label for="height" class="form-label">Height (cm)</label>
+            <input type="number" class="form-control" id="height" name="height" placeholder="0">
+          </div>
+
+          <!-- Weight -->
+          <div class="col-md-3">
+            <label for="weight" class="form-label">Weight (kg)</label>
+            <input type="number" class="form-control" id="weight" name="weight" placeholder="0">
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary me-2">Save Changes</button>
+          <button type="reset" class="btn btn-secondary">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
                                             </div>
                                         </div>
                                     </div>

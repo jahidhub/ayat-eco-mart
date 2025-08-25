@@ -50,8 +50,7 @@
                   </li>
                   <li> <a href="{{ route('admin.products.size.index') }}"><i class="bx bx-right-arrow-alt"></i>Size</a>
                   </li>
-                  <li> <a href="{{ route('admin.manage.colors.index') }}"><i class="bx bx-right-arrow-alt"></i>Color</a>
-                  </li>
+               
 
 
               </ul>

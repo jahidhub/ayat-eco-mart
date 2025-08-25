@@ -13,21 +13,29 @@ return new class extends Migration
     {
         Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('size_id')->nullable();
-            $table->unsignedBigInteger('color_id')->nullable();
-            $table->string('sku')->unique();
-            $table->decimal('mrp', 10, 2)->nullable();
-            $table->decimal('price', 10, 2)->nullable();
-            $table->integer('qty')->default(0);
-            $table->decimal('length', 8, 2)->nullable();
-            $table->decimal('height', 8, 2)->nullable();
-            $table->decimal('weight', 8, 2)->nullable();
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
 
-            // foreign keys
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('size_id')->references('id')->on('sizes')->onDelete('set null');
-            $table->foreign('color_id')->references('id')->on('colors')->onDelete('set null');
+            // Prices
+            $table->decimal('regular_price', 10, 2)->nullable();
+            $table->decimal('sale_price', 10, 2)->nullable();
+
+            // Attributes
+            $table->foreignId('size_id')->nullable()->constrained('sizes')->onDelete('set null');
+            $table->foreignId('color_id')->nullable()->constrained('colors')->onDelete('set null');
+
+            // SKU & stock
+            $table->string('sku')->nullable()->unique();
+            $table->integer('quantity')->default(0);
+            $table->enum('stock_status', ['in_stock', 'out_of_stock'])->default('in_stock');
+
+            // Variant status
+            $table->enum('status', ['enabled', 'disabled'])->default('enabled');
+
+            // Dimensions
+            $table->decimal('weight', 8, 2)->nullable();
+            $table->decimal('length', 8, 2)->nullable();
+            $table->decimal('width', 8, 2)->nullable();
+            $table->decimal('height', 8, 2)->nullable();
 
             $table->timestamps();
         });
