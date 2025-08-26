@@ -21,9 +21,10 @@ return new class extends Migration
 
             // Attributes
             $table->foreignId('size_id')->nullable()->constrained('sizes')->onDelete('set null');
-            $table->foreignId('color_id')->nullable()->constrained('colors')->onDelete('set null');
-
+            $table->string('color')->nullable();
+            
             // SKU & stock
+           
             $table->string('sku')->nullable()->unique();
             $table->integer('quantity')->default(0);
             $table->enum('stock_status', ['in_stock', 'out_of_stock'])->default('in_stock');
