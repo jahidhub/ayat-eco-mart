@@ -16,23 +16,24 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('feature_image')->nullable();
+            $table->enum('product_type', ['simple', 'variable'])->default('simple');
+
+            // Relations
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('brand_id')->nullable();
-            $table->string('item_code')->nullable()->unique();
-            $table->integer('quantity')->default(0);
-            $table->enum('stock_status', ['in_stock', 'out_of_stock'])->default('in_stock');
-            // Dimensions
-            $table->decimal('weight', 8, 2)->nullable();
-            $table->decimal('length', 8, 2)->nullable();
-            $table->decimal('width', 8, 2)->nullable();
-            $table->decimal('height', 8, 2)->nullable();
 
-            $table->text('description')->nullable();
-            $table->text('keywords')->nullable();
-
+            // Status
             $table->enum('status', ['enabled', 'disabled'])->default('enabled');
 
+            // Descriptions & SEO
+            $table->text('short_description')->nullable();
+            $table->text('description')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->text('keywords')->nullable();
+
             $table->timestamps();
+
             $table->foreign('category_id')
                 ->references('id')
                 ->on('categories')

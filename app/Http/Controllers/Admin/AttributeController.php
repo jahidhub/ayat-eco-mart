@@ -33,7 +33,7 @@ class AttributeController extends Controller
             ]);
         } else if ($request->id == 0) {
             $request->validate([
-                "name" => "required|string|max:255|unique:attributes,name",
+                "name" => "required|string|max:255",
                 "slug" => "nullable|string|max:255|unique:attributes,slug"
             ]);
         }
@@ -72,7 +72,7 @@ class AttributeController extends Controller
 
         $rules = [
             "attr_id" => "required|integer",
-            "value" => "required|string|max:255|unique:attribute_values,attribute_value"
+            "value" => "required|string|max:255"
         ];
 
         if ($request->id > 0) {

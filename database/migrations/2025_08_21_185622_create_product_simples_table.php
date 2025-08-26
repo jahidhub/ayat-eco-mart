@@ -11,32 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_variants', function (Blueprint $table) {
+        Schema::create('product_simples', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
 
-            // Attributes
-            $table->foreignId('size_id')->nullable()->constrained('sizes')->onDelete('set null');
-            $table->string('color')->nullable();
-
-            // Prices
-            $table->decimal('regular_price', 10, 2)->nullable();
+            // Pricing
+            $table->decimal('regular_price', 10, 2);
             $table->decimal('sale_price', 10, 2)->nullable();
-
-            // SKU & stock
+            // Stock & product type
             $table->string('sku')->nullable()->unique();
-            $table->integer('quantity')->default(0);
+          
+            $table->unsignedInteger('quantity')->default(0);
             $table->enum('stock_status', ['in_stock', 'out_of_stock'])->default('in_stock');
 
-            // Variant status
-            $table->enum('status', ['enabled', 'disabled'])->default('enabled');
-
-            // Dimensions
+            // Dimensions (only if simple product)
             $table->decimal('weight', 8, 2)->nullable();
             $table->decimal('length', 8, 2)->nullable();
             $table->decimal('width', 8, 2)->nullable();
             $table->decimal('height', 8, 2)->nullable();
-
             $table->timestamps();
         });
     }
@@ -46,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_variants');
+        Schema::dropIfExists('product_simples');
     }
 };

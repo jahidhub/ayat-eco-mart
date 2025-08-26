@@ -64,22 +64,38 @@
 
                         <!-- Product Data Tabs -->
                         <div class="card">
-                            <div class="card-header bg-light fw-bold">Product Data</div>
+                            <div class="card-header bg-light fw-bold">Product Type</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <select name="product_type" id="product_type" class="form-select">
+                                            <option value="simple">Simple Product</option>
+                                            <option value="variable">variable Product</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-lg-2">
                                         <!-- Vertical Nav Tabs -->
                                         <div class="nav flex-column nav-pills" id="productTabs" role="tablist"
                                             aria-orientation="vertical">
-                                            <button class="nav-link active text-start" id="general-tab"
+
+
+                                            {{-- <button class="nav-link active text-start" id="general-tab"
                                                 data-bs-toggle="pill" data-bs-target="#general" type="button"
-                                                role="tab">General</button>
+                                                role="tab">General</button> --}}
+                                            <button class="nav-link text-start" id="general-tab" data-bs-toggle="pill"
+                                                data-bs-target="#general" type="button" role="tab">General</button>
                                             <button class="nav-link text-start" id="inventory-tab" data-bs-toggle="pill"
                                                 data-bs-target="#inventory" type="button" role="tab">Inventory</button>
                                             <button class="nav-link text-start" id="shipping-tab" data-bs-toggle="pill"
                                                 data-bs-target="#shipping" type="button" role="tab">Shipping</button>
-                                            <button class="nav-link text-start" id="shipping-tab" data-bs-toggle="pill"
-                                                data-bs-target="#valiations" type="button"
+
+                                            <button class="nav-link text-start" id="valiation-tab" data-bs-toggle="pill"
+                                                data-bs-target="#valiation" type="button"
                                                 role="tab">Valiations</button>
                                         </div>
                                     </div>
@@ -87,16 +103,18 @@
                                     <div class="col-lg-10">
                                         <div class="tab-content bg-light p-3" id="productTabsContent">
                                             <!-- General Tab -->
-                                            <div class="tab-pane fade show active" id="general" role="tabpanel"
+                                            {{-- <div class="tab-pane fade show active" id="general" role="tabpanel"
+                                                aria-labelledby="general-tab"> --}}
+                                            <div class="tab-pane fade" id="general" role="tabpanel"
                                                 aria-labelledby="general-tab">
                                                 <div class="mb-3">
-                                                    <label class="form-label">Regular Price</label>
-                                                    <input type="number" id="mrp" name="mrp" class="form-control"
-                                                        placeholder="0.00">
+                                                    <label id="reguler_price" class="form-label">Regular Price</label>
+                                                    <input type="number" id="reguler_price" name="reguler_price"
+                                                        class="form-control" placeholder="0.00">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Sale Price</label>
-                                                    <input type="number" id="price" name="price"
+                                                    <label id="sale_price" class="form-label">Sale Price</label>
+                                                    <input type="number" id="sale_price" name="sale_price"
                                                         class="form-control" placeholder="0.00">
                                                 </div>
                                             </div>
@@ -110,15 +128,23 @@
                                                         class="form-control" placeholder="ABC123">
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Stock Quantity</label>
-                                                    <input type="number" id="qty" name="qty"
-                                                        class="form-control" placeholder="10">
+                                                    <label id="stock_status" class="form-label">Stock Status</label>
+                                                    <select name="stock_status" id="stock_status" class="form-select">
+                                                        <option value="in_stock">In_stock</option>
+                                                        <option value="out_of_stock">out_of_stock</option>
+                                                    </select>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="manageStock">
                                                     <label class="form-check-label" for="manageStock">Manage
                                                         stock?</label>
                                                 </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Stock Quantity</label>
+                                                    <input type="number" id="qty" name="qty"
+                                                        class="form-control" placeholder="10">
+                                                </div>
+
                                             </div>
 
                                             <!-- Shipping Tab -->
@@ -142,8 +168,8 @@
                                                 </div>
                                             </div>
                                             <!--  valiations -->
-                                            <div class="tab-pane fade" id="valiations" role="tabpanel"
-                                                aria-labelledby="shipping-tab">
+                                            <div class="tab-pane fade" id="valiation" role="tabpanel"
+                                                aria-labelledby="valiation-tab">
                                                 <div class="container my-4">
                                                     <div class="card">
                                                         <div
@@ -264,16 +290,16 @@
                                                             </div>
 
                                                         </div>
-                                                        <div class="p-3 d-flex justify-content-start">
-                                                            <button type="submit" class="btn btn-primary me-2">Save
-                                                                Changes</button>
-                                                            <button type="reset"
-                                                                class="btn btn-secondary">Cancel</button>
-                                                        </div>
+
                                                     </div>
                                                 </div>
 
                                             </div>
+                                        </div>
+                                        <div class="mt-3 d-flex justify-content-start">
+                                            <button type="submit" class="btn btn-primary me-2">Save
+                                                Changes</button>
+                                            <button type="reset" class="btn btn-secondary">Cancel</button>
                                         </div>
                                     </div>
                                 </div>
@@ -454,6 +480,65 @@
                     }
                 });
             });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            const productType = $('#product_type');
+
+            function toggleTabs(value) {
+
+
+                $('#productTabs .nav-link').removeClass('active');
+                $('#productTabsContent .tab-pane').removeClass('show active');
+
+
+
+                if (value === 'simple') {
+
+                    $('#general-tab').addClass('active');
+                    $('#general').addClass('show active');
+
+                    // $('#general').show();
+                    // $('#inventory').show();
+                    // $('#shipping').show();
+                    $('#general-tab').show();
+                    $('#inventory-tab').show();
+                    $('#shipping-tab').show();
+
+
+                    // $('#valiation').hide();
+                    $('#valiation-tab').hide();
+                } else {
+                    $('#valiation-tab').addClass('active');
+                    $('#valiation').addClass('show active');
+
+                    // $('#general').hide();
+                    // $('#inventory').hide();
+                    // $('#shipping').hide();
+                    $('#general-tab').hide();
+                    $('#inventory-tab').hide();
+                    $('#shipping-tab').hide();
+
+                    // $('#variation').show();
+                    $('#valiation-tab').show();
+                }
+            }
+
+
+
+
+            if (productType.length) {
+                // Check initial value on page load
+
+                toggleTabs(productType.val());
+
+
+                productType.on('change', function() {
+                    toggleTabs($(this).val());
+                });
+            }
         });
     </script>
 @endsection
