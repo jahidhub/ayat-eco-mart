@@ -408,17 +408,9 @@
 @endsection
 
 @section('customJs')
-    <script>
+    {{-- <script>
         $(document).ready(function() {
-            // const categoryId = $('#category_id');
-
-            // const container = $('#attribute-checkboxes');
-
-            // if (categoryId.val() === '') {
-            //     container.html('<p class="text-muted">No attributes found</p>');
-            // }
-
-
+   
             $('#category_id').on('change', function() {
                 const url = "{{ route('getAttribute') }}";
                 const category_id = $(this).val();
@@ -512,7 +504,113 @@
                 });
             });
         });
-    </script>
+    </script> --}}
+
+ <script>
+    $(document).ready(function() {
+        const attributeContainer = $('#attribute-checkboxes');
+        const categorySelect = $('#category_id');
+
+        // Function to render attributes from the AJAX response
+        function renderAttributes(attributes) {
+            attributeContainer.empty();
+
+            if (!attributes || attributes.length === 0) {
+                attributeContainer.html('<p class="text-muted">No attributes found</p>');
+                return;
+            }
+
+            const usedAttributes = new Set();
+
+            attributes.forEach(attrData => {
+                const attribute = attrData.attribute;
+                
+                // Check if the attribute has values and hasn't been used yet
+                if (!attribute || !attribute.values || attribute.values.length === 0 || usedAttributes.has(attribute.name)) {
+                    return;
+                }
+
+                usedAttributes.add(attribute.name);
+
+                // Create a section for the attribute
+                const section = $('<div>', {
+                    class: 'mb-3'
+                });
+                section.append($('<strong>').text(attribute.name));
+
+                const usedValues = new Set();
+
+                attribute.values.forEach(valData => {
+                    const attributeValue = valData.attribute_value;
+                    if (!attributeValue || usedValues.has(attributeValue)) {
+                        return;
+                    }
+                    usedValues.add(attributeValue);
+
+                    // Create the checkbox and label
+                    const wrapper = $('<div>', {
+                        class: 'form-check ms-3'
+                    });
+                    const checkbox = $('<input>', {
+                        type: 'checkbox',
+                        class: 'form-check-input',
+                        name: 'attribute_value_id[]',
+                        id: `attr_${valData.id}`,
+                        value: valData.id
+                    });
+                    const label = $('<label>', {
+                        class: 'form-check-label',
+                        for: `attr_${valData.id}`,
+                        text: attributeValue
+                    });
+
+                    wrapper.append(checkbox, label);
+                    section.append(wrapper);
+                });
+
+                attributeContainer.append(section);
+            });
+        }
+
+        // Handle category change event
+        categorySelect.on('change', function() {
+            const category_id = $(this).val();
+            attributeContainer.empty().html('<p class="text-muted">Loading attributes...</p>');
+
+            if (!category_id) {
+                attributeContainer.empty();
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('getAttribute') }}",
+                type: "POST",
+                data: {
+                    category_id: category_id,
+                    _token: "{{ csrf_token() }}"
+                },
+                dataType: "json",
+                success: function(response) {
+                    if (response.status && response.data?.attributes) {
+                        renderAttributes(response.data.attributes);
+                    } else {
+                        attributeContainer.html(
+                            '<p class="text-muted">No attributes found</p>');
+                    }
+                },
+                error: function(xhr) {
+                    const message = xhr.responseJSON?.message || 'An error occurred.';
+                    attributeContainer.html(`<p class="text-danger">${message}</p>`);
+                }
+            });
+        });
+
+        // Trigger the change event on page load if a category is pre-selected
+        if (categorySelect.val()) {
+            categorySelect.trigger('change');
+        }
+    });
+</script>
 
     <script>
         $(document).ready(function() {
@@ -575,6 +673,13 @@
         // Optional: auto-generate when user clicks the input
         document.getElementById("sku").addEventListener("focus", function() {
             if (!this.value) {
+                generateSKU();
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const skuInput = document.getElementById("sku");
+            if (skuInput && !skuInput.value) {
                 generateSKU();
             }
         });

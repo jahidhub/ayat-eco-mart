@@ -14,12 +14,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\AttributeValue;
 use App\Models\ProductAttribute;
-use Attribute;
-use Illuminate\Support\Facades\Validator;
+use App\Models\ProductVariant;
 
-use function PHPUnit\Framework\assertNotEmpty;
-
-// use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -95,7 +91,7 @@ class ProductController extends Controller
                 'sale_price'    => 'nullable|numeric|min:0|lt:regular_price',
                 'sku'           => 'required|string|max:100|unique:product_simples,sku',
                 'stock_status'  => 'required|in:in_stock,out_of_stock',
-                'quantity'      => 'nullable|integer|min:0',
+                'quantity'      => 'nullable|integer',
                 'weight'        => 'nullable|numeric|min:0',
                 'length'        => 'nullable|numeric|min:0',
                 'width'         => 'nullable|numeric|min:0',
@@ -155,6 +151,8 @@ class ProductController extends Controller
                     'width'         => $request->width,
                     'height'        => $request->height,
                 ]);
+
+                ProductVariant::where('product_id' , $product->id )->delete();
             }
 
             // Save attribute_value
