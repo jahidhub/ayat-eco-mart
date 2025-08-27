@@ -43,9 +43,6 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/manage/sizes', [SizeController::class, 'index'])->name('admin.products.size.index');
         Route::POST('/manage/sizes/add', [SizeController::class, 'store'])->name('admin.products.size.store');
 
-        // ColorController
-        Route::get('/manage/colors', [ColorController::class, 'index'])->name('admin.manage.colors.index');
-        Route::post('/manage/colors/add', [ColorController::class, 'store'])->name('admin.manage.colors.store');
 
         // AttributeController
         Route::get('/manage/attributes', [AttributeController::class, 'attributes_index'])->name('admin.attribute.index');

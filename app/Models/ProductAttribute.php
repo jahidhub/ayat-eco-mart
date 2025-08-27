@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductAttribute extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'product_id',
+        'attribute_id',
+        'attribute_value_id'
+    ];
 }

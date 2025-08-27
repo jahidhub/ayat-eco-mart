@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Brand;
-use App\Models\Category;
-use App\Models\CategoryAttribute;
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use App\Models\ProductSimple;
 use App\Traits\ApiResponseTrait;
 use App\Traits\ImageUploadTrait;
-use Illuminate\Http\Request;
+use App\Models\CategoryAttribute;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log as FacadesLog;
 
 class ProductController extends Controller
 {
@@ -44,56 +47,93 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+
+
+        // dd($request->all());
+
+
         $rules = [
-            'name'       => 'required|string|max:255',
-            'slug'       => 'required|string|max:255|unique:products,slug',
-            'description' => 'nullable|string',
-            // 'mrp'        => 'nullable|numeric',
-            // 'price'      => 'nullable|numeric',
-            // 'sku'        => 'nullable|string|max:100',
-            // 'qty'        => 'nullable|integer|min:0',
-            // 'weight'     => 'nullable|numeric',
-            // 'length'     => 'nullable|numeric',
-            // 'width'      => 'nullable|numeric',
-            // 'height'     => 'nullable|numeric',
-            'keywords'   => 'nullable|string',
-            'new_image'  => 'nullable|image|mimes:jpg,jpeg,png,gif|max:5124',
+            'name'          => 'required|string|max:255',
+            'slug'          => 'required|string|max:255|unique:products,slug',
+            'description'   => 'nullable|string',
+            'keywords'      => 'nullable|string|max:255',
+            'feature_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:5124',
+            'category_id'   => 'nullable|exists:categories,id',
+            'brand_id'      => 'nullable|exists:brands,id',
+            'status'        => 'required|in:enabled,disabled',
+            'product_type'  => 'required|in:simple,variable',
+
+            // simple product rules
+            'regular_price' => 'nullable|numeric|min:0',
+            'sale_price'    => 'nullable|numeric|min:0',
+            'sku'           => 'nullable|string|max:100|unique:product_simples,sku',
+            'stock_status'  => 'required|in:in_stock,out_of_stock',
+            'quantity'      => 'nullable|integer|min:0',
+            'weight'        => 'nullable|numeric|min:0',
+            'length'        => 'nullable|numeric|min:0',
+            'width'         => 'nullable|numeric|min:0',
+            'height'        => 'nullable|numeric|min:0',
         ];
 
         $validation = Validator::make($request->all(), $rules);
 
         if ($validation->fails()) {
-            return redirect()->back()->withErrors($validation)->withInput();
+            return redirect()->back()->with('error', 'Something went wrong !')->withErrors($validation)->withInput();
         }
 
-        $fieldName = 'new_image';
-        $imagePath = 'admin/assets/images/products/';
-        $model = new Product;
-        $prefix = 'product_feature';
+        DB::beginTransaction();
 
-        $image = $this->handleImageUpload($request, $fieldName, $imagePath, $model, $prefix);
+        try {
 
-        $model->name        = $request->name;
-        $model->slug        = $request->slug;
-        $model->image       = $image;
-        $model->description = $request->description;
-        $model->keywords    = $request->keywords;
 
-        // uncomment as needed
-        // $model->mrp    = $request->mrp;
-        // $model->price  = $request->price;
-        // $model->sku    = $request->sku;
-        // $model->qty    = $request->qty;
-        // $model->weight = $request->weight;
-        // $model->length = $request->length;
-        // $model->width  = $request->width;
-        // $model->height = $request->height;
 
-        $model->save();
+            $fieldName = 'feature_image';
+            $imagePath =  'admin/assets/images/products/';
+            $model = new Product;
+            $prefix = 'product_feature';
+            $feature_image = $this->handleImageUpload($request, $fieldName, $imagePath, $model, $prefix);
 
-        return redirect()->route('admin.product.edit', $model->id)
-            ->with('success', 'Product created successfully!');
+
+            // Save Product
+            $product = Product::create([
+                'name'          => $request->name,
+                'slug'          => $request->slug,
+                'feature_image' => $feature_image,
+                'description'   => $request->description,
+                'product_type'  => $request->product_type,
+                'category_id'   => $request->category_id,
+                'brand_id'      => $request->brand_id,
+                'status'        => $request->status,
+                'keywords'      => $request->keywords,
+            ]);
+
+            // If product type is simple, save in ProductSimple
+            if ($product->product_type === 'simple') {
+                ProductSimple::create([
+                    'product_id'    => $product->id,
+                    'regular_price' => $request->regular_price,
+                    'sale_price'    => $request->sale_price,
+                    'sku'           => $request->sku,
+                    'quantity'      => $request->quantity,
+                    'stock_status'  => $request->stock_status,
+                    'weight'        => $request->weight,
+                    'length'        => $request->length,
+                    'width'         => $request->width,
+                    'height'        => $request->height,
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.product.edit', $product->id)
+                ->with('success', 'Product created successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
+        }
     }
+
+
 
     /**
      * Display the specified resource.

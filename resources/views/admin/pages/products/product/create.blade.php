@@ -83,10 +83,6 @@
                                         <div class="nav flex-column nav-pills" id="productTabs" role="tablist"
                                             aria-orientation="vertical">
 
-
-                                            {{-- <button class="nav-link active text-start" id="general-tab"
-                                                data-bs-toggle="pill" data-bs-target="#general" type="button"
-                                                role="tab">General</button> --}}
                                             <button class="nav-link text-start" id="general-tab" data-bs-toggle="pill"
                                                 data-bs-target="#general" type="button" role="tab">General</button>
                                             <button class="nav-link text-start" id="inventory-tab" data-bs-toggle="pill"
@@ -94,22 +90,21 @@
                                             <button class="nav-link text-start" id="shipping-tab" data-bs-toggle="pill"
                                                 data-bs-target="#shipping" type="button" role="tab">Shipping</button>
 
-                                            <button class="nav-link text-start" id="valiation-tab" data-bs-toggle="pill"
+                                            {{-- <button class="nav-link text-start" id="valiation-tab" data-bs-toggle="pill"
                                                 data-bs-target="#valiation" type="button"
-                                                role="tab">Valiations</button>
+                                                role="tab">Valiations</button> --}}
                                         </div>
                                     </div>
 
                                     <div class="col-lg-10">
                                         <div class="tab-content bg-light p-3" id="productTabsContent">
                                             <!-- General Tab -->
-                                            {{-- <div class="tab-pane fade show active" id="general" role="tabpanel"
-                                                aria-labelledby="general-tab"> --}}
+
                                             <div class="tab-pane fade" id="general" role="tabpanel"
                                                 aria-labelledby="general-tab">
                                                 <div class="mb-3">
-                                                    <label id="reguler_price" class="form-label">Regular Price</label>
-                                                    <input type="number" id="reguler_price" name="reguler_price"
+                                                    <label id="regular_price" class="form-label">Regular Price</label>
+                                                    <input type="number" id="regular_price" name="regular_price"
                                                         class="form-control" placeholder="0.00">
                                                 </div>
                                                 <div class="mb-3">
@@ -124,8 +119,12 @@
                                                 aria-labelledby="inventory-tab">
                                                 <div class="mb-3">
                                                     <label class="form-label">SKU</label>
-                                                    <input type="text" id="sku" name="sku"
+                                                   <div class="input-group">
+                                                     <input type="text" id="sku" name="sku"
                                                         class="form-control" placeholder="ABC123">
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                        onclick="generateSKU()">Generate SKU</button>
+                                                   </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label id="stock_status" class="form-label">Stock Status</label>
@@ -140,8 +139,8 @@
                                                         stock?</label>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Stock Quantity</label>
-                                                    <input type="number" id="qty" name="qty"
+                                                    <label id="quantity" class="form-label">Stock Quantity</label>
+                                                    <input type="number" id="quantity" name="quantity"
                                                         class="form-control" placeholder="10">
                                                 </div>
 
@@ -168,7 +167,7 @@
                                                 </div>
                                             </div>
                                             <!--  valiations -->
-                                            <div class="tab-pane fade" id="valiation" role="tabpanel"
+                                            {{-- <div class="tab-pane fade" id="valiation" role="tabpanel"
                                                 aria-labelledby="valiation-tab">
                                                 <div class="container my-4">
                                                     <div class="card">
@@ -294,12 +293,13 @@
                                                     </div>
                                                 </div>
 
-                                            </div>
+                                            </div> --}}
                                         </div>
                                         <div class="mt-3 d-flex justify-content-start">
-                                            <button type="submit" class="btn btn-primary me-2">Save
+                                            <button type="submit" id="submitButton" class="btn btn-primary me-2">Save
                                                 Changes</button>
-                                            <button type="reset" class="btn btn-secondary">Cancel</button>
+                                            <button onclick="" type="reset"
+                                                class="btn btn-secondary">Cancel</button>
                                         </div>
                                     </div>
                                 </div>
@@ -338,7 +338,7 @@
                             <div class="card-header fw-bold">Categories</div>
                             <div class="card-body">
 
-                                <select name="category" id="category" class="form-control">
+                                <select name="category_id" id="category_id" class="form-control">
 
                                     <option value="">Selete category</option>
                                     @foreach ($categories as $category)
@@ -351,8 +351,6 @@
                             <div class="card-header fw-bold">Category related attributes</div>
                             <div class="card-body">
 
-                                {{-- <select name="attributes" id="attributes" class="form-control multicheck" multiple>
-                                </select> --}}
 
                                 <div id="attribute-checkboxes" class="form-control"
                                     style="height:auto; min-height:50px; overflow-y:auto;">
@@ -366,7 +364,7 @@
                         <div class="card mb-4">
                             <div class="card-header fw-bold">Brands</div>
                             <div class="card-body">
-                                <select name="category" id="category" class="form-control">
+                                <select name="brand_id" id="brand_id" class="form-control">
 
                                     <option value="">Selete Option</option>
                                     @foreach ($brands as $brand)
@@ -386,6 +384,23 @@
                                     placeholder="Enter keywords, separated by commas">
                             </div>
                         </div>
+                        <div class="card">
+                            <div class="card-header fw-bold">Status</div>
+                            <div class="card-body d-flex ">
+                                <div class="form-check me-3">
+                                    <input type="radio" name="status" id="status_enabled" value="enabled"
+                                        class="form-check-input">
+                                    <label for="status_enabled" class="form-check-label">Enabled</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="radio" name="status" id="status_disabled" value="disabled"
+                                        class="form-check-input">
+                                    <label for="status_disabled" class="form-check-label">Disabled</label>
+                                </div>
+                            </div>
+                        </div>
+
 
                     </div>
                 </div>
@@ -397,7 +412,16 @@
 @section('customJs')
     <script>
         $(document).ready(function() {
-            $('#category').on('change', function() {
+            const categoryId = $('#category_id');
+
+            const container = $('#attribute-checkboxes');
+
+            if (categoryId.val() === '') {
+                container.html('<p class="text-muted">No attributes found</p>');
+            }
+
+
+            $('#category_id').on('change', function() {
                 const url = "{{ route('getAttribute') }}";
                 const category_id = $(this).val();
                 const container = $('#attribute-checkboxes');
@@ -419,7 +443,8 @@
 
                             $.each(response.data.attributes, function(key, value) {
                                 const attribute = value.attribute;
-                                if (!attribute || !Array.isArray(attribute.values) ||
+                                if (!attribute || !Array.isArray(attribute
+                                        .values) ||
                                     attribute.values.length === 0) {
                                     container.html(
                                         '<p class="text-muted">No attributes found</p>'
@@ -435,14 +460,18 @@
                                 const section = $('<div>', {
                                     class: 'mb-3'
                                 });
-                                section.append($('<strong>').text(attribute.name));
+                                section.append($('<strong>').text(attribute
+                                    .name));
 
                                 const usedValues = {};
 
                                 $.each(attribute.values, function(i, val) {
-                                    if (!val.attribute_value || usedValues[val
-                                            .attribute_value]) return;
-                                    usedValues[val.attribute_value] = true;
+                                    if (!val.attribute_value ||
+                                        usedValues[val
+                                            .attribute_value])
+                                        return;
+                                    usedValues[val
+                                        .attribute_value] = true;
 
                                     const wrapper = $('<div>', {
                                         class: 'form-check ms-3'
@@ -451,13 +480,16 @@
                                         type: 'checkbox',
                                         class: 'form-check-input',
                                         name: 'attributes[]',
-                                        id: 'attr_' + val.id,
+                                        id: 'attr_' + val
+                                            .id,
                                         value: val.id
                                     });
                                     const label = $('<label>', {
                                         class: 'form-check-label',
-                                        for: 'attr_' + val.id,
-                                        text: val.attribute_value
+                                        for: 'attr_' + val
+                                            .id,
+                                        text: val
+                                            .attribute_value
                                     });
 
                                     wrapper.append(checkbox, label);
@@ -468,7 +500,8 @@
                             });
                         } else {
                             container.html(
-                                '<span class="text-muted">No attributes found</span>');
+                                '<span class="text-muted">No attributes found</span>'
+                            );
                         }
                     },
                     error: function(xhr) {
@@ -488,12 +521,8 @@
             const productType = $('#product_type');
 
             function toggleTabs(value) {
-
-
                 $('#productTabs .nav-link').removeClass('active');
                 $('#productTabsContent .tab-pane').removeClass('show active');
-
-
 
                 if (value === 'simple') {
 
@@ -514,20 +543,14 @@
                     $('#valiation-tab').addClass('active');
                     $('#valiation').addClass('show active');
 
-                    // $('#general').hide();
-                    // $('#inventory').hide();
-                    // $('#shipping').hide();
                     $('#general-tab').hide();
                     $('#inventory-tab').hide();
                     $('#shipping-tab').hide();
 
-                    // $('#variation').show();
+
                     $('#valiation-tab').show();
                 }
             }
-
-
-
 
             if (productType.length) {
                 // Check initial value on page load
@@ -538,6 +561,23 @@
                 productType.on('change', function() {
                     toggleTabs($(this).val());
                 });
+            }
+        });
+    </script>
+    <script>
+        function generateSKU() {
+            // Example SKU format: PRODXYZ9
+            let prefix = "PROD";
+            let random = Math.random().toString(36).substring(2, 6).toUpperCase(); // 4 chars
+            let sku = `${prefix}${random}`;
+
+            document.getElementById("sku").value = sku;
+        }
+
+        // Optional: auto-generate when user clicks the input
+        document.getElementById("sku").addEventListener("focus", function() {
+            if (!this.value) {
+                generateSKU();
             }
         });
     </script>
