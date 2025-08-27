@@ -24,8 +24,7 @@
             <hr>
 
             <!-- Add Product Form -->
-            <form id="#form_submit" action="{{ route('admin.product.store') }}" method="post"
-                enctype="multipart/form-data">
+            <form id="form_submit" action="{{ route('admin.product.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-lg-8">
@@ -119,12 +118,12 @@
                                                 aria-labelledby="inventory-tab">
                                                 <div class="mb-3">
                                                     <label class="form-label">SKU</label>
-                                                   <div class="input-group">
-                                                     <input type="text" id="sku" name="sku"
-                                                        class="form-control" placeholder="ABC123">
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                        onclick="generateSKU()">Generate SKU</button>
-                                                   </div>
+                                                    <div class="input-group">
+                                                        <input type="text" id="sku" name="sku"
+                                                            class="form-control" placeholder="ABC123">
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                            onclick="generateSKU()">Generate SKU</button>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label id="stock_status" class="form-label">Stock Status</label>
@@ -351,7 +350,6 @@
                             <div class="card-header fw-bold">Category related attributes</div>
                             <div class="card-body">
 
-
                                 <div id="attribute-checkboxes" class="form-control"
                                     style="height:auto; min-height:50px; overflow-y:auto;">
 
@@ -388,7 +386,7 @@
                             <div class="card-header fw-bold">Status</div>
                             <div class="card-body d-flex ">
                                 <div class="form-check me-3">
-                                    <input type="radio" name="status" id="status_enabled" value="enabled"
+                                    <input checked type="radio" name="status" id="status_enabled" value="enabled"
                                         class="form-check-input">
                                     <label for="status_enabled" class="form-check-label">Enabled</label>
                                 </div>
@@ -412,13 +410,13 @@
 @section('customJs')
     <script>
         $(document).ready(function() {
-            const categoryId = $('#category_id');
+            // const categoryId = $('#category_id');
 
-            const container = $('#attribute-checkboxes');
+            // const container = $('#attribute-checkboxes');
 
-            if (categoryId.val() === '') {
-                container.html('<p class="text-muted">No attributes found</p>');
-            }
+            // if (categoryId.val() === '') {
+            //     container.html('<p class="text-muted">No attributes found</p>');
+            // }
 
 
             $('#category_id').on('change', function() {
@@ -479,7 +477,7 @@
                                     const checkbox = $('<input>', {
                                         type: 'checkbox',
                                         class: 'form-check-input',
-                                        name: 'attributes[]',
+                                        name: 'attribute_value_id[]',
                                         id: 'attr_' + val
                                             .id,
                                         value: val.id

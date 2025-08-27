@@ -12,8 +12,14 @@ use App\Traits\ImageUploadTrait;
 use App\Models\CategoryAttribute;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\AttributeValue;
+use App\Models\ProductAttribute;
+use Attribute;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log as FacadesLog;
+
+use function PHPUnit\Framework\assertNotEmpty;
+
+// use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -49,50 +55,78 @@ class ProductController extends Controller
     {
 
 
-        // dd($request->all());
+
+
+        // "category_id" => "1"
+        //   "attribute_value_id" => array:3 [
+        //     0 => "107"
+        //     1 => "224"
+        //     2 => "226"
+        //   ]
+
+
+        //   "keywords" => "Keywords , Keywords,Keywords"
+
+
 
 
         $rules = [
             'name'          => 'required|string|max:255',
             'slug'          => 'required|string|max:255|unique:products,slug',
             'description'   => 'nullable|string',
-            'keywords'      => 'nullable|string|max:255',
+            'keywords' => [
+                'nullable',
+                'string',
+                'max:255',
+                'regex:/^[A-Za-z\s,]+$/'
+            ],
+
             'feature_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:5124',
             'category_id'   => 'nullable|exists:categories,id',
+            'attribute_value_id'   => 'nullable|exists:attribute_values,id',
             'brand_id'      => 'nullable|exists:brands,id',
             'status'        => 'required|in:enabled,disabled',
             'product_type'  => 'required|in:simple,variable',
-
-            // simple product rules
-            'regular_price' => 'nullable|numeric|min:0',
-            'sale_price'    => 'nullable|numeric|min:0',
-            'sku'           => 'nullable|string|max:100|unique:product_simples,sku',
-            'stock_status'  => 'required|in:in_stock,out_of_stock',
-            'quantity'      => 'nullable|integer|min:0',
-            'weight'        => 'nullable|numeric|min:0',
-            'length'        => 'nullable|numeric|min:0',
-            'width'         => 'nullable|numeric|min:0',
-            'height'        => 'nullable|numeric|min:0',
         ];
 
-        $validation = Validator::make($request->all(), $rules);
-
-        if ($validation->fails()) {
-            return redirect()->back()->with('error', 'Something went wrong !')->withErrors($validation)->withInput();
+        if ($request->product_type === 'simple') {
+            $rules = array_merge($rules, [
+                'regular_price' => 'required|numeric|min:0',
+                'sale_price'    => 'nullable|numeric|min:0|lt:regular_price',
+                'sku'           => 'required|string|max:100|unique:product_simples,sku',
+                'stock_status'  => 'required|in:in_stock,out_of_stock',
+                'quantity'      => 'nullable|integer|min:0',
+                'weight'        => 'nullable|numeric|min:0',
+                'length'        => 'nullable|numeric|min:0',
+                'width'         => 'nullable|numeric|min:0',
+                'height'        => 'nullable|numeric|min:0',
+            ]);
         }
 
+        $request->validate($rules);
+
+        if ($request->filled('keywords')) {
+
+            $key_array = explode(',', $request->keywords);
+
+            $key_trim = array_map('trim', $key_array);
+
+            $keywords = json_encode($key_trim);
+        } else {
+            $keywords = null;
+        }
+
+
+
         DB::beginTransaction();
-
         try {
-
-
-
-            $fieldName = 'feature_image';
-            $imagePath =  'admin/assets/images/products/';
-            $model = new Product;
-            $prefix = 'product_feature';
-            $feature_image = $this->handleImageUpload($request, $fieldName, $imagePath, $model, $prefix);
-
+            $feature_image = $this->handleImageUpload(
+                $request,
+                'feature_image',
+                'admin/assets/images/products/',
+                new Product,
+                'product_feature'
+            );
 
             // Save Product
             $product = Product::create([
@@ -104,17 +138,17 @@ class ProductController extends Controller
                 'category_id'   => $request->category_id,
                 'brand_id'      => $request->brand_id,
                 'status'        => $request->status,
-                'keywords'      => $request->keywords,
+                'keywords'      => $keywords,
             ]);
 
-            // If product type is simple, save in ProductSimple
+            // Save simple product details
             if ($product->product_type === 'simple') {
                 ProductSimple::create([
                     'product_id'    => $product->id,
                     'regular_price' => $request->regular_price,
                     'sale_price'    => $request->sale_price,
                     'sku'           => $request->sku,
-                    'quantity'      => $request->quantity,
+                    'quantity'      => $request->quantity ?? 0,
                     'stock_status'  => $request->stock_status,
                     'weight'        => $request->weight,
                     'length'        => $request->length,
@@ -123,15 +157,37 @@ class ProductController extends Controller
                 ]);
             }
 
+            // Save attribute_value
+            if (!empty($product->category_id)) {
+
+                if (!empty($request->attribute_value_id) && is_array($request->attribute_value_id)) {
+
+                    foreach ($request->attribute_value_id as $val) {
+
+                        $attributeValue = AttributeValue::find($val);
+
+                        if ($attributeValue) {
+                            $attributeId = $attributeValue->attribute_id;
+
+                            ProductAttribute::create([
+                                'product_id'         => $product->id,
+                                'attribute_id'       => $attributeId,
+                                'attribute_value_id' => $val,
+                            ]);
+                        }
+                    }
+                }
+            }
+
             DB::commit();
 
-            return redirect()->route('admin.product.edit', $product->id)
-                ->with('success', 'Product created successfully!');
+            return $this->success(['redirect_url' => route('admin.product.edit', $product->id)], 'Product Created Successfully');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage())->withInput();
+            return $this->error([], 'Something went wrong!', 404);
         }
     }
+
 
 
 

@@ -43,7 +43,7 @@
              toast: true,
              position: "top-end",
              showConfirmButton: false,
-             timer: 1000,
+             timer: 3000,
              timerProgressBar: true,
              didOpen: (toast) => {
                  toast.onmouseenter = Swal.stopTimer;
@@ -85,12 +85,16 @@
                              icon: "success",
                              title: response.message
                          });
-                         setTimeout(() => {
 
+                         if (response.data.redirect_url) {
+                             window.location.href = response.data.redirect_url;
+                         }
+
+                         setTimeout(() => {
                              if (response.data.reload == true) {
                                  window.location.reload();
                              }
-                         }, 1000);
+                         }, 3000);
 
                          $('#form_submit')[0].reset();
 
@@ -216,7 +220,7 @@
 
      function input_reset() {
          document.getElementById("feature_image").value = "";
-        //  console.log("File input reset after reload");
+         //  console.log("File input reset after reload");
      }
  </script>
  <script>
