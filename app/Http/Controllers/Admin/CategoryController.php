@@ -7,6 +7,7 @@ use App\Models\Attribute;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AttributeValue;
 use App\Models\CategoryAttribute;
 use App\Traits\ApiResponseTrait;
 use App\Traits\ImageUploadTrait;
@@ -87,13 +88,16 @@ class CategoryController extends Controller
      */
     public function index_category_attribute()
     {
-        $items = CategoryAttribute::with('category', 'attribute')->latest()->paginate();
-
+        $items = CategoryAttribute::with('category', 'attribute', 'attribute_values')->latest()->paginate();
+        // echo '<pre>';
+        // print_r($items->toArray());
+        // echo '</pre>';
         $categories = Category::get();
         $attributes = Attribute::get();
 
         return view('admin.pages.products.category.category-attribute', compact('items', 'categories', 'attributes'));
     }
+    
     public function store_category_attribute(Request $request)
     {
 

@@ -89,9 +89,9 @@
                                             <button class="nav-link text-start" id="shipping-tab" data-bs-toggle="pill"
                                                 data-bs-target="#shipping" type="button" role="tab">Shipping</button>
 
-                                            {{-- <button class="nav-link text-start" id="valiation-tab" data-bs-toggle="pill"
+                                            <button class="nav-link text-start" id="valiation-tab" data-bs-toggle="pill"
                                                 data-bs-target="#valiation" type="button"
-                                                role="tab">Valiations</button> --}}
+                                                role="tab">Valiations</button>
                                         </div>
                                     </div>
 
@@ -120,9 +120,9 @@
                                                     <label class="form-label">SKU</label>
                                                     <div class="input-group">
                                                         <input type="text" id="sku" name="sku"
-                                                            class="form-control" placeholder="ABC123">
+                                                            class="form-control" placeholder="PROD123">
                                                         <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                            onclick="generateSKU()">Generate SKU</button>
+                                                            onclick="generateSKU('sku', 'PROD', '6')">Generate SKU</button>
                                                     </div>
                                                 </div>
                                                 <div class="mb-3">
@@ -166,7 +166,7 @@
                                                 </div>
                                             </div>
                                             <!--  valiations -->
-                                            {{-- <div class="tab-pane fade" id="valiation" role="tabpanel"
+                                            <div class="tab-pane fade" id="valiation" role="tabpanel"
                                                 aria-labelledby="valiation-tab">
                                                 <div class="container my-4">
                                                     <div class="card">
@@ -189,11 +189,17 @@
 
                                                                     <!-- SKU -->
                                                                     <div class="col-md-3">
-                                                                        <label for="sku"
+                                                                        <label for="var_sku"
                                                                             class="form-label">SKU</label>
-                                                                        <input type="text" class="form-control"
-                                                                            id="sku" name="sku"
-                                                                            placeholder="Enter SKU">
+                                                                        <div class="input-group">
+                                                                            <input type="text" id="var_sku"
+                                                                                name="var_sku" class="form-control"
+                                                                                placeholder="VAR123">
+                                                                            <button type="button"
+                                                                                class="btn btn-sm btn-outline-secondary"
+                                                                                onclick="generateSKU('var_sku', 'VAR', '6')">
+                                                                                SKU</button>
+                                                                        </div>
                                                                     </div>
                                                                     <!-- Quantity -->
                                                                     <div class="col-md-3">
@@ -206,21 +212,22 @@
 
                                                                     <!-- Regular Price -->
                                                                     <div class="col-md-3">
-                                                                        <label for="mrp" class="form-label">Regular
+                                                                        <label for="regular_Price"
+                                                                            class="form-label">Regular
                                                                             Price
                                                                             (£)</label>
                                                                         <input type="number" class="form-control"
-                                                                            id="mrp" name="mrp"
+                                                                            id="regular_Price" name="regular_Price"
                                                                             placeholder="0.00">
                                                                     </div>
 
                                                                     <!-- Sale Price -->
                                                                     <div class="col-md-3">
-                                                                        <label for="price" class="form-label">Sale
+                                                                        <label for="sale_Price" class="form-label">Sale
                                                                             Price
                                                                             (£)</label>
                                                                         <input type="number" class="form-control"
-                                                                            id="price" name="price"
+                                                                            id="sale_Price" name="sale_Price"
                                                                             placeholder="0.00">
                                                                     </div>
 
@@ -231,9 +238,12 @@
                                                                         <select id="size_id" name="size_id"
                                                                             class="form-select">
                                                                             <option value="">Select Size</option>
-                                                                            <option value="1">Small</option>
-                                                                            <option value="2">Medium</option>
-                                                                            <option value="3">Large</option>
+
+                                                                            @foreach ($sizes as $size)
+                                                                                <option value="{{ $size->id }}">
+                                                                                    {{ $size->size }}</option>
+                                                                            @endforeach
+
                                                                         </select>
                                                                     </div>
 
@@ -262,7 +272,7 @@
                                                                             id="length" name="length"
                                                                             placeholder="0">
                                                                     </div>
-                                                                    <!-- Length -->
+                                                                    <!-- width -->
                                                                     <div class="col-md-3">
                                                                         <label for="width" class="form-label">Width
                                                                             (cm)</label>
@@ -292,7 +302,7 @@
                                                     </div>
                                                 </div>
 
-                                            </div> --}}
+                                            </div>
                                         </div>
                                         <div class="mt-3 d-flex justify-content-start">
                                             <button type="submit" id="submitButton" class="btn btn-primary me-2">Save
@@ -408,19 +418,85 @@
 @endsection
 
 @section('customJs')
-    {{-- <script>
+    <script>
         $(document).ready(function() {
-   
-            $('#category_id').on('change', function() {
-                const url = "{{ route('getAttribute') }}";
-                const category_id = $(this).val();
-                const container = $('#attribute-checkboxes');
-                container.empty();
+            const attributeContainer = $('#attribute-checkboxes');
+            const categorySelect = $('#category_id');
 
-                if (!category_id) return;
+            // Function to render attributes from the AJAX response
+            function renderAttributes(attributes) {
+                attributeContainer.empty();
+
+                if (!attributes || attributes.length === 0) {
+                    attributeContainer.html('<p class="text-muted">No attributes found</p>');
+                    return;
+                }
+
+                const usedAttributes = new Set();
+
+                attributes.forEach(attrData => {
+                    const attribute = attrData.attribute;
+
+                    // Check if the attribute has values and hasn't been used yet
+                    if (!attribute || !attribute.values || attribute.values.length === 0 || usedAttributes
+                        .has(attribute.name)) {
+                        return;
+                    }
+
+                    usedAttributes.add(attribute.name);
+
+                    // Create a section for the attribute
+                    const section = $('<div>', {
+                        class: 'mb-3'
+                    });
+                    section.append($('<strong>').text(attribute.name));
+
+                    const usedValues = new Set();
+
+                    attribute.values.forEach(valData => {
+                        const attributeValue = valData.attribute_value;
+                        if (!attributeValue || usedValues.has(attributeValue)) {
+                            return;
+                        }
+                        usedValues.add(attributeValue);
+
+                        // Create the checkbox and label
+                        const wrapper = $('<div>', {
+                            class: 'form-check ms-3'
+                        });
+                        const checkbox = $('<input>', {
+                            type: 'checkbox',
+                            class: 'form-check-input',
+                            name: 'attribute_value_id[]',
+                            id: `attr_${valData.id}`,
+                            value: valData.id
+                        });
+                        const label = $('<label>', {
+                            class: 'form-check-label',
+                            for: `attr_${valData.id}`,
+                            text: attributeValue
+                        });
+
+                        wrapper.append(checkbox, label);
+                        section.append(wrapper);
+                    });
+
+                    attributeContainer.append(section);
+                });
+            }
+
+            // Handle category change event
+            categorySelect.on('change', function() {
+                const category_id = $(this).val();
+                attributeContainer.empty().html('<p class="text-muted">Loading attributes...</p>');
+
+                if (!category_id) {
+                    attributeContainer.empty();
+                    return;
+                }
 
                 $.ajax({
-                    url: url,
+                    url: "{{ route('getAttribute') }}",
                     type: "POST",
                     data: {
                         category_id: category_id,
@@ -429,188 +505,25 @@
                     dataType: "json",
                     success: function(response) {
                         if (response.status && response.data?.attributes) {
-                            const usedAttributes = {};
-
-                            $.each(response.data.attributes, function(key, value) {
-                                const attribute = value.attribute;
-                                if (!attribute || !Array.isArray(attribute
-                                        .values) ||
-                                    attribute.values.length === 0) {
-                                    container.html(
-                                        '<p class="text-muted">No attributes found</p>'
-                                    );
-                                    return;
-                                }
-
-                                // Skip duplicate attributes
-                                if (usedAttributes[attribute.name]) return;
-                                usedAttributes[attribute.name] = true;
-
-                                // Section wrapper
-                                const section = $('<div>', {
-                                    class: 'mb-3'
-                                });
-                                section.append($('<strong>').text(attribute
-                                    .name));
-
-                                const usedValues = {};
-
-                                $.each(attribute.values, function(i, val) {
-                                    if (!val.attribute_value ||
-                                        usedValues[val
-                                            .attribute_value])
-                                        return;
-                                    usedValues[val
-                                        .attribute_value] = true;
-
-                                    const wrapper = $('<div>', {
-                                        class: 'form-check ms-3'
-                                    });
-                                    const checkbox = $('<input>', {
-                                        type: 'checkbox',
-                                        class: 'form-check-input',
-                                        name: 'attribute_value_id[]',
-                                        id: 'attr_' + val
-                                            .id,
-                                        value: val.id
-                                    });
-                                    const label = $('<label>', {
-                                        class: 'form-check-label',
-                                        for: 'attr_' + val
-                                            .id,
-                                        text: val
-                                            .attribute_value
-                                    });
-
-                                    wrapper.append(checkbox, label);
-                                    section.append(wrapper);
-                                });
-
-                                container.append(section);
-                            });
+                            renderAttributes(response.data.attributes);
                         } else {
-                            container.html(
-                                '<span class="text-muted">No attributes found</span>'
-                            );
+                            attributeContainer.html(
+                                '<p class="text-muted">No attributes found</p>');
                         }
                     },
                     error: function(xhr) {
-
-                        var mesg = xhr.responseJSON.message;
-                        container.html(
-                            '<span class="text-muted">' + mesg + '</span>'
-                        );
+                        const message = xhr.responseJSON?.message || 'An error occurred.';
+                        attributeContainer.html(`<p class="text-danger">${message}</p>`);
                     }
                 });
             });
-        });
-    </script> --}}
 
- <script>
-    $(document).ready(function() {
-        const attributeContainer = $('#attribute-checkboxes');
-        const categorySelect = $('#category_id');
-
-        // Function to render attributes from the AJAX response
-        function renderAttributes(attributes) {
-            attributeContainer.empty();
-
-            if (!attributes || attributes.length === 0) {
-                attributeContainer.html('<p class="text-muted">No attributes found</p>');
-                return;
+            // Trigger the change event on page load if a category is pre-selected
+            if (categorySelect.val()) {
+                categorySelect.trigger('change');
             }
-
-            const usedAttributes = new Set();
-
-            attributes.forEach(attrData => {
-                const attribute = attrData.attribute;
-                
-                // Check if the attribute has values and hasn't been used yet
-                if (!attribute || !attribute.values || attribute.values.length === 0 || usedAttributes.has(attribute.name)) {
-                    return;
-                }
-
-                usedAttributes.add(attribute.name);
-
-                // Create a section for the attribute
-                const section = $('<div>', {
-                    class: 'mb-3'
-                });
-                section.append($('<strong>').text(attribute.name));
-
-                const usedValues = new Set();
-
-                attribute.values.forEach(valData => {
-                    const attributeValue = valData.attribute_value;
-                    if (!attributeValue || usedValues.has(attributeValue)) {
-                        return;
-                    }
-                    usedValues.add(attributeValue);
-
-                    // Create the checkbox and label
-                    const wrapper = $('<div>', {
-                        class: 'form-check ms-3'
-                    });
-                    const checkbox = $('<input>', {
-                        type: 'checkbox',
-                        class: 'form-check-input',
-                        name: 'attribute_value_id[]',
-                        id: `attr_${valData.id}`,
-                        value: valData.id
-                    });
-                    const label = $('<label>', {
-                        class: 'form-check-label',
-                        for: `attr_${valData.id}`,
-                        text: attributeValue
-                    });
-
-                    wrapper.append(checkbox, label);
-                    section.append(wrapper);
-                });
-
-                attributeContainer.append(section);
-            });
-        }
-
-        // Handle category change event
-        categorySelect.on('change', function() {
-            const category_id = $(this).val();
-            attributeContainer.empty().html('<p class="text-muted">Loading attributes...</p>');
-
-            if (!category_id) {
-                attributeContainer.empty();
-                return;
-            }
-
-            $.ajax({
-                url: "{{ route('getAttribute') }}",
-                type: "POST",
-                data: {
-                    category_id: category_id,
-                    _token: "{{ csrf_token() }}"
-                },
-                dataType: "json",
-                success: function(response) {
-                    if (response.status && response.data?.attributes) {
-                        renderAttributes(response.data.attributes);
-                    } else {
-                        attributeContainer.html(
-                            '<p class="text-muted">No attributes found</p>');
-                    }
-                },
-                error: function(xhr) {
-                    const message = xhr.responseJSON?.message || 'An error occurred.';
-                    attributeContainer.html(`<p class="text-danger">${message}</p>`);
-                }
-            });
         });
-
-        // Trigger the change event on page load if a category is pre-selected
-        if (categorySelect.val()) {
-            categorySelect.trigger('change');
-        }
-    });
-</script>
+    </script>
 
     <script>
         $(document).ready(function() {
@@ -661,26 +574,36 @@
         });
     </script>
     <script>
-        function generateSKU() {
-            // Example SKU format: PRODXYZ9
-            let prefix = "PROD";
-            let random = Math.random().toString(36).substring(2, 6).toUpperCase(); // 4 chars
+        function generateSKU(inputId = "sku", prefix = "PROD", length = 6) {
+
+            let random = Math.random().toString(36).substring(2, 2 + length).toUpperCase();
             let sku = `${prefix}${random}`;
 
-            document.getElementById("sku").value = sku;
+            document.getElementById(inputId).value = sku;
         }
 
-        // Optional: auto-generate when user clicks the input
         document.getElementById("sku").addEventListener("focus", function() {
             if (!this.value) {
-                generateSKU();
+                generateSKU("sku", "PROD", 6);
             }
         });
 
         document.addEventListener("DOMContentLoaded", function() {
             const skuInput = document.getElementById("sku");
             if (skuInput && !skuInput.value) {
-                generateSKU();
+                generateSKU("sku", "PROD", 6);
+            }
+        });
+        document.getElementById("var_sku").addEventListener("focus", function() {
+            if (!this.value) {
+                generateSKU("var_sku", "PROD", 6);
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const skuInput = document.getElementById("var_sku");
+            if (skuInput && !skuInput.value) {
+                generateSKU("var_sku", "PROD", 6);
             }
         });
     </script>

@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AttributeValue;
 use App\Models\ProductAttribute;
 use App\Models\ProductVariant;
-
+use App\Models\Size;
 
 class ProductController extends Controller
 {
@@ -40,8 +40,9 @@ class ProductController extends Controller
 
         $categories = Category::get();
         $brands = Brand::get();
+        $sizes = Size::get();
 
-        return view('admin.pages.products.product.create', compact('categories', 'brands'));
+        return view('admin.pages.products.product.create', compact('categories', 'brands', 'sizes'));
     }
 
     /**
@@ -51,7 +52,7 @@ class ProductController extends Controller
     {
 
 
-
+        dd($request->all());
 
         // "category_id" => "1"
         //   "attribute_value_id" => array:3 [
@@ -116,7 +117,6 @@ class ProductController extends Controller
 
         DB::beginTransaction();
         try {
-<<<<<<< HEAD
 
             $fieldName = 'feature_image';
             $imagePath =  'admin/assets/images/products/';
@@ -124,15 +124,6 @@ class ProductController extends Controller
             $prefix = 'product_feature';
             $feature_image = $this->handleImageUpload($request, $fieldName, $imagePath, $model, $prefix);
 
-=======
-            $feature_image = $this->handleImageUpload(
-                $request,
-                'feature_image',
-                'admin/assets/images/products/',
-                new Product,
-                'product_feature'
-            );
->>>>>>> 21991d01a9de57b191c36dfcb29f460ea1f58c3e
 
             // Save Product
             $product = Product::create([
@@ -149,6 +140,7 @@ class ProductController extends Controller
 
             // Save simple product details
             if ($product->product_type === 'simple') {
+                ProductVariant::where('product_id', $product->id)->delete();
                 ProductSimple::create([
                     'product_id'    => $product->id,
                     'regular_price' => $request->regular_price,
@@ -161,8 +153,15 @@ class ProductController extends Controller
                     'width'         => $request->width,
                     'height'        => $request->height,
                 ]);
+            }
 
-                ProductVariant::where('product_id' , $product->id )->delete();
+
+
+            // variable product details
+
+            if ($product->product_type === 'variable') {
+
+
             }
 
             // Save attribute_value

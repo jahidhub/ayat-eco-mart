@@ -53,10 +53,14 @@
                                             <tr class="text-center">
                                                 <th>Category Name</th>
                                                 <th>Attribute Name</th>
+                                                <th>Attribute values</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+
+
+
                                             @forelse ($items as $data)
                                                 <tr>
                                                     <td class="text-center fw-semibold text-dark">
@@ -64,6 +68,15 @@
                                                     </td>
                                                     <td class="text-center fw-semibold text-dark">
                                                         {{ $data->attribute->name }}
+                                                    </td>
+                                                    <td class="text-center fw-semibold text-dark">
+                                                        @foreach ($data->attribute_values as $val)
+                                                            {{ $val->attribute_value }}
+
+                                                            @if (!$loop->last)
+                                                                ,
+                                                            @endif
+                                                        @endforeach
                                                     </td>
 
                                                     <td class="text-center">

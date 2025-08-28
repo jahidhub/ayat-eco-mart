@@ -18,4 +18,8 @@ class CategoryAttribute extends Model
     {
         return $this->belongsTo(Attribute::class, 'attribute_id', 'id');
     }
+    public function attribute_values()
+    {
+        return $this->hasMany(AttributeValue::class, 'attribute_id', 'attribute_id');
+    }
 }
