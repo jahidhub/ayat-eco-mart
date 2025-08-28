@@ -85,8 +85,6 @@ class ProductController extends Controller
 
         try {
 
-
-
             $fieldName = 'feature_image';
             $imagePath =  'admin/assets/images/products/';
             $model = new Product;
