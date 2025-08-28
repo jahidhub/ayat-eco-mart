@@ -24,8 +24,7 @@
             <hr>
 
             <!-- Add Product Form -->
-            <form id="#form_submit" action="{{ route('admin.product.store') }}" method="post"
-                enctype="multipart/form-data">
+            <form id="form_submit" action="{{ route('admin.product.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-lg-8">
@@ -119,12 +118,12 @@
                                                 aria-labelledby="inventory-tab">
                                                 <div class="mb-3">
                                                     <label class="form-label">SKU</label>
-                                                   <div class="input-group">
-                                                     <input type="text" id="sku" name="sku"
-                                                        class="form-control" placeholder="ABC123">
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                        onclick="generateSKU()">Generate SKU</button>
-                                                   </div>
+                                                    <div class="input-group">
+                                                        <input type="text" id="sku" name="sku"
+                                                            class="form-control" placeholder="ABC123">
+                                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                            onclick="generateSKU()">Generate SKU</button>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label id="stock_status" class="form-label">Stock Status</label>
@@ -351,7 +350,6 @@
                             <div class="card-header fw-bold">Category related attributes</div>
                             <div class="card-body">
 
-
                                 <div id="attribute-checkboxes" class="form-control"
                                     style="height:auto; min-height:50px; overflow-y:auto;">
 
@@ -388,7 +386,7 @@
                             <div class="card-header fw-bold">Status</div>
                             <div class="card-body d-flex ">
                                 <div class="form-check me-3">
-                                    <input type="radio" name="status" id="status_enabled" value="enabled"
+                                    <input checked type="radio" name="status" id="status_enabled" value="enabled"
                                         class="form-check-input">
                                     <label for="status_enabled" class="form-check-label">Enabled</label>
                                 </div>
@@ -410,17 +408,9 @@
 @endsection
 
 @section('customJs')
-    <script>
+    {{-- <script>
         $(document).ready(function() {
-            const categoryId = $('#category_id');
-
-            const container = $('#attribute-checkboxes');
-
-            if (categoryId.val() === '') {
-                container.html('<p class="text-muted">No attributes found</p>');
-            }
-
-
+   
             $('#category_id').on('change', function() {
                 const url = "{{ route('getAttribute') }}";
                 const category_id = $(this).val();
@@ -479,7 +469,7 @@
                                     const checkbox = $('<input>', {
                                         type: 'checkbox',
                                         class: 'form-check-input',
-                                        name: 'attributes[]',
+                                        name: 'attribute_value_id[]',
                                         id: 'attr_' + val
                                             .id,
                                         value: val.id
@@ -514,7 +504,113 @@
                 });
             });
         });
-    </script>
+    </script> --}}
+
+ <script>
+    $(document).ready(function() {
+        const attributeContainer = $('#attribute-checkboxes');
+        const categorySelect = $('#category_id');
+
+        // Function to render attributes from the AJAX response
+        function renderAttributes(attributes) {
+            attributeContainer.empty();
+
+            if (!attributes || attributes.length === 0) {
+                attributeContainer.html('<p class="text-muted">No attributes found</p>');
+                return;
+            }
+
+            const usedAttributes = new Set();
+
+            attributes.forEach(attrData => {
+                const attribute = attrData.attribute;
+                
+                // Check if the attribute has values and hasn't been used yet
+                if (!attribute || !attribute.values || attribute.values.length === 0 || usedAttributes.has(attribute.name)) {
+                    return;
+                }
+
+                usedAttributes.add(attribute.name);
+
+                // Create a section for the attribute
+                const section = $('<div>', {
+                    class: 'mb-3'
+                });
+                section.append($('<strong>').text(attribute.name));
+
+                const usedValues = new Set();
+
+                attribute.values.forEach(valData => {
+                    const attributeValue = valData.attribute_value;
+                    if (!attributeValue || usedValues.has(attributeValue)) {
+                        return;
+                    }
+                    usedValues.add(attributeValue);
+
+                    // Create the checkbox and label
+                    const wrapper = $('<div>', {
+                        class: 'form-check ms-3'
+                    });
+                    const checkbox = $('<input>', {
+                        type: 'checkbox',
+                        class: 'form-check-input',
+                        name: 'attribute_value_id[]',
+                        id: `attr_${valData.id}`,
+                        value: valData.id
+                    });
+                    const label = $('<label>', {
+                        class: 'form-check-label',
+                        for: `attr_${valData.id}`,
+                        text: attributeValue
+                    });
+
+                    wrapper.append(checkbox, label);
+                    section.append(wrapper);
+                });
+
+                attributeContainer.append(section);
+            });
+        }
+
+        // Handle category change event
+        categorySelect.on('change', function() {
+            const category_id = $(this).val();
+            attributeContainer.empty().html('<p class="text-muted">Loading attributes...</p>');
+
+            if (!category_id) {
+                attributeContainer.empty();
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('getAttribute') }}",
+                type: "POST",
+                data: {
+                    category_id: category_id,
+                    _token: "{{ csrf_token() }}"
+                },
+                dataType: "json",
+                success: function(response) {
+                    if (response.status && response.data?.attributes) {
+                        renderAttributes(response.data.attributes);
+                    } else {
+                        attributeContainer.html(
+                            '<p class="text-muted">No attributes found</p>');
+                    }
+                },
+                error: function(xhr) {
+                    const message = xhr.responseJSON?.message || 'An error occurred.';
+                    attributeContainer.html(`<p class="text-danger">${message}</p>`);
+                }
+            });
+        });
+
+        // Trigger the change event on page load if a category is pre-selected
+        if (categorySelect.val()) {
+            categorySelect.trigger('change');
+        }
+    });
+</script>
 
     <script>
         $(document).ready(function() {
@@ -577,6 +673,13 @@
         // Optional: auto-generate when user clicks the input
         document.getElementById("sku").addEventListener("focus", function() {
             if (!this.value) {
+                generateSKU();
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const skuInput = document.getElementById("sku");
+            if (skuInput && !skuInput.value) {
                 generateSKU();
             }
         });
