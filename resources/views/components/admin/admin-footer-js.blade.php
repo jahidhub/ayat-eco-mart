@@ -43,7 +43,7 @@
              toast: true,
              position: "top-end",
              showConfirmButton: false,
-             timer: 3000,
+             timer: 1000,
              timerProgressBar: true,
              didOpen: (toast) => {
                  toast.onmouseenter = Swal.stopTimer;
@@ -94,7 +94,7 @@
                              if (response.data.reload == true) {
                                  window.location.reload();
                              }
-                         }, 3000);
+                         }, 1000);
 
                          $('#form_submit')[0].reset();
 

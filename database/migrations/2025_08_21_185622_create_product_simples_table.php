@@ -21,7 +21,7 @@ return new class extends Migration
             // Stock & product type
             $table->string('sku')->nullable()->unique();
 
-            $table->unsignedInteger('quantity')->default(0);
+            $table->Integer('quantity')->nullable();
             $table->enum('stock_status', ['in_stock', 'out_of_stock'])->default('in_stock');
 
             // Dimensions (only if simple product)

@@ -28,8 +28,6 @@ return new class extends Migration
             $table->integer('quantity')->default(0);
             $table->enum('stock_status', ['in_stock', 'out_of_stock'])->default('in_stock');
 
-            // Variant status
-            $table->enum('status', ['enabled', 'disabled'])->default('enabled');
 
             // Dimensions
             $table->decimal('weight', 8, 2)->nullable();

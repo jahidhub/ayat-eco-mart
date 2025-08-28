@@ -16,7 +16,6 @@ class ProductVariant extends Model
         'sku',
         'quantity',
         'stock_status',
-        'status',
         'weight',
         'length',
         'width',

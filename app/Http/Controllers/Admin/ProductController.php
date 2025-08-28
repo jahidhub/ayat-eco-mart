@@ -52,19 +52,7 @@ class ProductController extends Controller
     {
 
 
-        dd($request->all());
-
-        // "category_id" => "1"
-        //   "attribute_value_id" => array:3 [
-        //     0 => "107"
-        //     1 => "224"
-        //     2 => "226"
-        //   ]
-
-
-        //   "keywords" => "Keywords , Keywords,Keywords"
-
-
+        // dd($request->all());
 
 
         $rules = [
@@ -90,14 +78,38 @@ class ProductController extends Controller
             $rules = array_merge($rules, [
                 'regular_price' => 'required|numeric|min:0',
                 'sale_price'    => 'nullable|numeric|min:0|lt:regular_price',
-                'sku'           => 'required|string|max:100|unique:product_simples,sku',
+                'sku'           => 'required|string|max:100|unique:product_simples,sku,' . $request->id,
                 'stock_status'  => 'required|in:in_stock,out_of_stock',
-                'quantity'      => 'nullable|integer',
+                'quantity'      => 'nullable|integer|min:0',
                 'weight'        => 'nullable|numeric|min:0',
                 'length'        => 'nullable|numeric|min:0',
                 'width'         => 'nullable|numeric|min:0',
                 'height'        => 'nullable|numeric|min:0',
             ]);
+        }
+
+
+        if ($request->product_type === 'variable') {
+
+            $rules = array_merge(
+
+                $rules,
+                [
+                    'var_sku' => 'required|string|max:100|unique:product_variants,sku,' .
+                        $request->id,
+                    'var_quantity' => 'nullable|numeric|min:0',
+                    'var_regular_Price' => 'required|numeric|min:0',
+                    'var_sale_Price' => 'nullable|numeric|min:0|lt:var_regular_Price',
+                    'var_size_id' => 'nullable|numeric',
+                    'var_color' => 'nullable|string',
+                    'var_weight' => 'nullable|numeric|min:0',
+                    'var_length' => 'nullable|numeric|min:0',
+                    'var_width' => 'nullable|numeric|min:0',
+                    'var_height' => 'nullable|numeric|min:0',
+                ]
+
+
+            );
         }
 
         $request->validate($rules);
@@ -146,7 +158,7 @@ class ProductController extends Controller
                     'regular_price' => $request->regular_price,
                     'sale_price'    => $request->sale_price,
                     'sku'           => $request->sku,
-                    'quantity'      => $request->quantity ?? 0,
+                    'quantity'      => $request->stock_status == 'out_of_stock' ? 0 : $request->quantity,
                     'stock_status'  => $request->stock_status,
                     'weight'        => $request->weight,
                     'length'        => $request->length,
@@ -156,12 +168,31 @@ class ProductController extends Controller
             }
 
 
+            if ($product->product_type === 'variable') {
+
+                ProductSimple::where('product_id', $product->id)->delete();
+
+                ProductVariant::create(
+                    [
+                        'product_id' => $product->id,
+                        'size_id' =>  $request->var_size_id,
+                        'color' => $request->var_color,
+                        'regular_price' => $request->var_regular_Price,
+                        'sale_price' => $request->var_sale_Price,
+                        'sku' => $request->var_sku,
+                        'quantity' => $request->var_quantity ?? 0,
+                        'stock_status' => $request->var_quantity > 0 ? 'in_stock' : 'out_of_stock',
+                        'weight' => $request->var_weight,
+                        'length' => $request->var_length,
+                        'width' => $request->var_width,
+                        'height' => $request->var_height,
+                    ]
+                );
+            }
 
             // variable product details
 
             if ($product->product_type === 'variable') {
-
-
             }
 
             // Save attribute_value
