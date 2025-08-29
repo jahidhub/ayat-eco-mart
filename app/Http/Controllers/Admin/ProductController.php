@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AttributeValue;
 use App\Models\ProductAttribute;
 use App\Models\ProductVariant;
+use App\Models\ProductVariantImage;
 use App\Models\Size;
 
 class ProductController extends Controller
@@ -95,13 +96,14 @@ class ProductController extends Controller
 
                 $rules,
                 [
+                    'var_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:5124',
                     'var_sku' => 'required|string|max:100|unique:product_variants,sku,' .
                         $request->id,
                     'var_quantity' => 'nullable|numeric|min:0',
                     'var_regular_Price' => 'required|numeric|min:0',
                     'var_sale_Price' => 'nullable|numeric|min:0|lt:var_regular_Price',
                     'var_size_id' => 'nullable|numeric',
-                    'var_color' => 'nullable|string',
+                    'color' => 'nullable|string|max:10',
                     'var_weight' => 'nullable|numeric|min:0',
                     'var_length' => 'nullable|numeric|min:0',
                     'var_width' => 'nullable|numeric|min:0',
@@ -137,6 +139,9 @@ class ProductController extends Controller
             $feature_image = $this->handleImageUpload($request, $fieldName, $imagePath, $model, $prefix);
 
 
+
+
+
             // Save Product
             $product = Product::create([
                 'name'          => $request->name,
@@ -152,6 +157,8 @@ class ProductController extends Controller
 
             // Save simple product details
             if ($product->product_type === 'simple') {
+
+
                 ProductVariant::where('product_id', $product->id)->delete();
                 ProductSimple::create([
                     'product_id'    => $product->id,
@@ -172,11 +179,11 @@ class ProductController extends Controller
 
                 ProductSimple::where('product_id', $product->id)->delete();
 
-                ProductVariant::create(
+                $ProductVariant =  ProductVariant::create(
                     [
                         'product_id' => $product->id,
                         'size_id' =>  $request->var_size_id,
-                        'color' => $request->var_color,
+                        'color' => $request->color,
                         'regular_price' => $request->var_regular_Price,
                         'sale_price' => $request->var_sale_Price,
                         'sku' => $request->var_sku,
@@ -193,6 +200,20 @@ class ProductController extends Controller
             // variable product details
 
             if ($product->product_type === 'variable') {
+
+
+                $fieldName = 'var_image';
+                $imagePath =  'admin/assets/images/products/variants/';
+                $model = new ProductVariant;
+                $prefix = 'product_var';
+                $var_image = $this->handleImageUpload($request, $fieldName, $imagePath, $model, $prefix);
+
+
+                ProductVariantImage::create([
+                    'product_id' => $product->id,
+                    'product_variant_id' => $ProductVariant->id,
+                    'image' => $var_image,
+                ]);
             }
 
             // Save attribute_value

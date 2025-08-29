@@ -27,9 +27,6 @@ trait ImageUploadTrait
         // $prefix = 'cat';
         // $image = $this->handleImageUpload($request, $fieldName, $imagePath, $model, $prefix);
 
-
-
-
         $dbImagePath = null;
 
         if ($request->hasFile($fieldName)) {

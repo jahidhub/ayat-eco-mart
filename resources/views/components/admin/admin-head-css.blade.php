@@ -21,3 +21,6 @@
 <link rel="stylesheet" href="{{ asset('admin/assets/css/header-colors.css') }}" />
 <link ref="stylesheet" type="text/css" href="{{ asset('admin/assets/sweetalert2/dists/sweetalert2.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('admin/assets/css/custom.css') }}" />
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
