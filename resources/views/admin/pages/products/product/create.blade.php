@@ -757,12 +757,12 @@
         // This function clones the whole card and resets the inputs.
         function cloneAndAppendVariation() {
             const variationsContainer = $('#var-container');
-            const variationTemplate = variationsContainer.find('.card').first();
+            const variationTemplate = variationsContainer.find('#var-content').first();
             const newVariation = variationTemplate.clone(true, true);
 
             // Clear input values in the new variation
             newVariation.find('input, select').val('');
-            newVariation.find('.img-preview').attr('src', 'https://placehold.co/100x100/E5E7EB/4B5563?text=Upload');
+            newVariation.find('#img-preview').attr('src', 'https://placehold.co/100x100/E5E7EB/4B5563?text=Upload');
 
             // Append the new variation to the container
             variationsContainer.append(newVariation);
@@ -799,8 +799,9 @@
             });
 
             // Ensure only the last card has the "Add New" button visible on load
-            // $('#add-new-variation').hide();
-            $('#var-container .card').last().find('#add-new-variation').show();
+
+            $('#add-new-variation').hide();
+            $('#var-container').last().find('#add-new-variation').show();
         });
     </script>
 @endsection
