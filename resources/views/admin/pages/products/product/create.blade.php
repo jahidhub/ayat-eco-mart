@@ -170,163 +170,169 @@
                                             <!--  valiations -->
                                             <div class="tab-pane fade" id="valiation" role="tabpanel"
                                                 aria-labelledby="valiation-tab">
-                                                <div class="container my-4">
-                                                    <div class="card">
-                                                        <div
-                                                            class="card-header  d-flex justify-content-between align-items-center">
-                                                            <h5 class="mb-0">Product Variations</h5>
-                                                            <a class="btn btn-primary me-2">Add New</a>
-                                                        </div>
-                                                        <div class="card shadow-sm border-0 mb-3">
+                                                <div class="valiation-section">
+                                                    <h5 class="mb-3">Product Variations</h5>
+                                                    <div id="var-container">
+                                                        <div class="card" id="var-content">
                                                             <div
-                                                                class="card-header bg-white d-flex justify-content-between align-items-center">
-                                                                <h6 class="mb-0 fw-bold text-dark">Variation</h6>
-                                                                <button type="button"
-                                                                    class="btn btn-sm btn-outline-danger">Remove</button>
+                                                                class="card-header  d-flex justify-content-between align-items-center">
+                                                                <h6 class="mb-0">Variations</h6>
+                                                                <div id="action-var">
+                                                                    <a class="btn btn-sm btn-outline-danger me-2"
+                                                                        id="remove-variation">Remove</a>
+                                                                    <a id="add-new-variation"
+                                                                        class="btn btn-sm btn-success">Add New</a>
+                                                                </div>
                                                             </div>
+                                                            <div class="card shadow-sm border-0 mb-3">
 
-                                                            <div class="card-body bg-light p-3">
-                                                                <div id="attribute-box">
-                                                                    <div class="row g-3 align-items-end">
+                                                                <div class="card-body bg-light p-3">
+                                                                    <div id="attribute-box">
+                                                                        <div class="row g-3 align-items-end">
 
-                                                                        <!-- Image -->
-                                                                        <div class="col-md-2">
-                                                                            <label for="var_image"
-                                                                                class="form-label">Image</label>
-                                                                            <div class="position-relative overflow-hidden border rounded p-1 bg-white text-center"
-                                                                                style="height: 80px;">
+                                                                            <!-- Image -->
+                                                                            <div class="col-md-2 col-lg-3">
                                                                                 <label for="var_image"
-                                                                                    class="h-100 d-flex justify-content-center align-items-center"
-                                                                                    style="cursor: pointer;">
-                                                                                    <img id="img_preview"
-                                                                                        src="{{ asset('admin/assets/images/image-upload.png') }}"
-                                                                                        alt="Click to upload"
-                                                                                        class="img-fluid h-100 object-fit-contain">
-                                                                                </label>
-                                                                                <input type="file" id="var_image"
-                                                                                    name="var_image"
+                                                                                    class="form-label">Image</label>
+                                                                                <div class="position-relative overflow-hidden border rounded p-1 bg-white text-center"
+                                                                                    style="height: 80px;">
+                                                                                    <label for="var_image"
+                                                                                        class="h-100 d-flex justify-content-center align-items-center"
+                                                                                        style="cursor: pointer;">
+                                                                                        <img id="img_preview"
+                                                                                            src="{{ asset('admin/assets/images/image-upload.png') }}"
+                                                                                            alt="Click to upload"
+                                                                                            class="img-fluid h-100 object-fit-contain">
+                                                                                    </label>
+                                                                                    <input type="file" id="var_image"
+                                                                                        name="var_image"
+                                                                                        class="form-control d-none"
+                                                                                        onchange="previewImage(event)">
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- SKU -->
+                                                                            <div class="col-11 col-md-9 col-lg-8">
+                                                                                <label for="var_sku"
+                                                                                    class="form-label">SKU</label>
+                                                                                <div class="input-group">
+                                                                                    <input type="text" id="var_sku"
+                                                                                        name="var_sku"
+                                                                                        class="form-control form-control-sm"
+                                                                                        placeholder="VAR123">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-sm btn-outline-secondary"
+                                                                                        onclick="generateSKU('var_sku', 'VAR', 6)">
+                                                                                        Generate
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <!-- Color -->
+                                                                            <div class="col-1 col-md-1 col-lg-1">
+                                                                                <label for="color"
+                                                                                    class="form-label">Color</label>
+                                                                                <input type="text"
                                                                                     class="form-control d-none"
-                                                                                    onchange="previewImage(event)">
+                                                                                    id="color" name="color">
+                                                                                <div class="pickr"></div>
                                                                             </div>
-                                                                        </div>
-
-                                                                        <!-- SKU -->
-                                                                        <div class="col-md-4">
-                                                                            <label for="var_sku"
-                                                                                class="form-label">SKU</label>
-                                                                            <div class="input-group">
-                                                                                <input type="text" id="var_sku"
-                                                                                    name="var_sku"
+                                                                            <!-- Regular Price -->
+                                                                            <div class="col-md-4 col-xxl-3">
+                                                                                <label for="var_regular_Price"
+                                                                                    class="form-label">Regular Price
+                                                                                    (£)</label>
+                                                                                <input type="number"
                                                                                     class="form-control form-control-sm"
-                                                                                    placeholder="VAR123">
-                                                                                <button type="button"
-                                                                                    class="btn btn-sm btn-outline-secondary"
-                                                                                    onclick="generateSKU('var_sku', 'VAR', 6)">
-                                                                                    Generate
-                                                                                </button>
+                                                                                    id="var_regular_Price"
+                                                                                    name="var_regular_Price"
+                                                                                    placeholder="0.00">
                                                                             </div>
-                                                                        </div>
 
-                                                                        <!-- Color -->
-                                                                        <div class="col-md-1">
-                                                                            <label for="color"
-                                                                                class="form-label">Color</label>
-                                                                            <input type="text"
-                                                                                class="form-control d-none" id="color"
-                                                                                name="color">
-                                                                            <div class="pickr"></div>
-                                                                        </div>
+                                                                            <!-- Sale Price -->
+                                                                            <div class="col-md-4 col-xxl-3">
+                                                                                <label for="var_sale_Price"
+                                                                                    class="form-label">Sale Price
+                                                                                    (£)</label>
+                                                                                <input type="number"
+                                                                                    class="form-control form-control-sm"
+                                                                                    id="var_sale_Price"
+                                                                                    name="var_sale_Price"
+                                                                                    placeholder="0.00">
+                                                                            </div>
+                                                                            <!-- Quantity -->
+                                                                            <div class="col-md-4 col-xxl-3">
+                                                                                <label for="var_quantity"
+                                                                                    class="form-label">Qty</label>
+                                                                                <input type="number"
+                                                                                    class="form-control form-control-sm"
+                                                                                    id="var_quantity" name="var_quantity"
+                                                                                    placeholder="0">
+                                                                            </div>
 
-                                                                        <!-- Quantity -->
-                                                                        <div class="col-md-2">
-                                                                            <label for="var_quantity"
-                                                                                class="form-label">Qty</label>
-                                                                            <input type="number"
-                                                                                class="form-control form-control-sm"
-                                                                                id="var_quantity" name="var_quantity"
-                                                                                placeholder="0">
-                                                                        </div>
 
-                                                                        <!-- Regular Price -->
-                                                                        <div class="col-md-3">
-                                                                            <label for="var_regular_Price"
-                                                                                class="form-label">Regular Price
-                                                                                (£)</label>
-                                                                            <input type="number"
-                                                                                class="form-control form-control-sm"
-                                                                                id="var_regular_Price"
-                                                                                name="var_regular_Price"
-                                                                                placeholder="0.00">
-                                                                        </div>
 
-                                                                        <!-- Sale Price -->
-                                                                        <div class="col-md-2">
-                                                                            <label for="var_sale_Price"
-                                                                                class="form-label">Sale Price (£)</label>
-                                                                            <input type="number"
-                                                                                class="form-control form-control-sm"
-                                                                                id="var_sale_Price" name="var_sale_Price"
-                                                                                placeholder="0.00">
-                                                                        </div>
+                                                                            <!-- Size -->
+                                                                            <div class="col-md-4 col-xxl-3">
+                                                                                <label for="var_size_id"
+                                                                                    class="form-label">Size</label>
+                                                                                <select id="var_size_id"
+                                                                                    name="var_size_id"
+                                                                                    class="form-select form-select-sm">
+                                                                                    <option value="">Select Size
+                                                                                    </option>
+                                                                                    @foreach ($sizes as $size)
+                                                                                        <option
+                                                                                            value="{{ $size->id }}">
+                                                                                            {{ $size->size }}</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
 
-                                                                        <!-- Size -->
-                                                                        <div class="col-md-2">
-                                                                            <label for="var_size_id"
-                                                                                class="form-label">Size</label>
-                                                                            <select id="var_size_id" name="var_size_id"
-                                                                                class="form-select form-select-sm">
-                                                                                <option value="">Select Size</option>
-                                                                                @foreach ($sizes as $size)
-                                                                                    <option value="{{ $size->id }}">
-                                                                                        {{ $size->size }}</option>
-                                                                                @endforeach
-                                                                            </select>
-                                                                        </div>
+                                                                            <!-- Weight -->
+                                                                            <div class="col-md-4 col-xxl-3">
+                                                                                <label for="var_weight"
+                                                                                    class="form-label">Weight (kg)</label>
+                                                                                <input type="number"
+                                                                                    class="form-control form-control-sm"
+                                                                                    id="var_weight" name="var_weight"
+                                                                                    placeholder="0">
+                                                                            </div>
 
-                                                                        <!-- Weight -->
-                                                                        <div class="col-md-2">
-                                                                            <label for="var_weight"
-                                                                                class="form-label">Weight (kg)</label>
-                                                                            <input type="number"
-                                                                                class="form-control form-control-sm"
-                                                                                id="var_weight" name="var_weight"
-                                                                                placeholder="0">
-                                                                        </div>
+                                                                            <!-- Length -->
+                                                                            <div class="col-md-4 col-xxl-3">
+                                                                                <label for="var_length"
+                                                                                    class="form-label">Length (cm)</label>
+                                                                                <input type="number"
+                                                                                    class="form-control form-control-sm"
+                                                                                    id="var_length" name="var_length"
+                                                                                    placeholder="0">
+                                                                            </div>
 
-                                                                        <!-- Length -->
-                                                                        <div class="col-md-2">
-                                                                            <label for="var_length"
-                                                                                class="form-label">Length (cm)</label>
-                                                                            <input type="number"
-                                                                                class="form-control form-control-sm"
-                                                                                id="var_length" name="var_length"
-                                                                                placeholder="0">
-                                                                        </div>
+                                                                            <!-- Width -->
+                                                                            <div class="col-md-4 col-xxl-3">
+                                                                                <label for="var_width"
+                                                                                    class="form-label">Width (cm)</label>
+                                                                                <input type="number"
+                                                                                    class="form-control form-control-sm"
+                                                                                    id="var_width" name="var_width"
+                                                                                    placeholder="0">
+                                                                            </div>
 
-                                                                        <!-- Width -->
-                                                                        <div class="col-md-2">
-                                                                            <label for="var_width"
-                                                                                class="form-label">Width (cm)</label>
-                                                                            <input type="number"
-                                                                                class="form-control form-control-sm"
-                                                                                id="var_width" name="var_width"
-                                                                                placeholder="0">
-                                                                        </div>
-
-                                                                        <!-- Height -->
-                                                                        <div class="col-md-2">
-                                                                            <label for="var_height"
-                                                                                class="form-label">Height (cm)</label>
-                                                                            <input type="number"
-                                                                                class="form-control form-control-sm"
-                                                                                id="var_height" name="var_height"
-                                                                                placeholder="0">
+                                                                            <!-- Height -->
+                                                                            <div class="col-md-4 col-xxl-3">
+                                                                                <label for="var_height"
+                                                                                    class="form-label">Height (cm)</label>
+                                                                                <input type="number"
+                                                                                    class="form-control form-control-sm"
+                                                                                    id="var_height" name="var_height"
+                                                                                    placeholder="0">
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-
 
                                                     </div>
                                                 </div>
@@ -717,6 +723,84 @@
                 colorInput.value = color.toHEXA().toString(0);
             }
             instance.hide();
+        });
+    </script>
+
+
+
+
+    {{-- ----------------- --}}
+
+
+    <script>
+        // A standalone function for SKU generation, as it is called with onclick
+        function generateSKU(button) {
+            const input = $(button).siblings('input[type="text"]');
+            let result = 'VAR';
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            for (let i = 0; i < 6; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            input.val(result);
+        }
+
+        // A standalone function for image preview, as it is called with onchange
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = event.target.closest('label').querySelector('img');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        // This function clones the whole card and resets the inputs.
+        function cloneAndAppendVariation() {
+            const variationsContainer = $('#var-container');
+            const variationTemplate = variationsContainer.find('.card').first();
+            const newVariation = variationTemplate.clone(true, true);
+
+            // Clear input values in the new variation
+            newVariation.find('input, select').val('');
+            newVariation.find('.img-preview').attr('src', 'https://placehold.co/100x100/E5E7EB/4B5563?text=Upload');
+
+            // Append the new variation to the container
+            variationsContainer.append(newVariation);
+
+            // Ensure only the last card has the "Add New" button visible
+            $('#add-new-variation').hide();
+            newVariation.find('#add-new-variation').show();
+        }
+
+        // This function removes the parent card of the clicked element.
+
+        function removeVariation(button) {
+            const card = $(button).closest('.card');
+            if ($('#var-container .card').length > 1) {
+                card.remove();
+                // After removal, ensure the "Add New" button is visible on the new last card
+                $('#var-container .card').last().find('#add-new-variation').show();
+            } else {
+                showMessage('You must have at least one variation.');
+            }
+        }
+
+        // Document ready function
+
+        $(document).ready(function() {
+            // Event listener for adding a new variation
+            $(document).on('click', '#add-new-variation', function() {
+                cloneAndAppendVariation();
+            });
+
+            // Event listener for removing a variation using event delegation
+            $(document).on('click', '#remove-variation', function() {
+                removeVariation(this);
+            });
+
+            // Ensure only the last card has the "Add New" button visible on load
+            // $('#add-new-variation').hide();
+            $('#var-container .card').last().find('#add-new-variation').show();
         });
     </script>
 @endsection
