@@ -121,8 +121,9 @@
                                                     <div class="input-group">
                                                         <input type="text" id="sku" name="sku"
                                                             class="form-control" placeholder="PROD123">
-                                                        <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                            onclick="generateSKU('sku', 'PROD', 6)">Generate SKU</button>
+                                                        <button type="button"
+                                                            class="generate-sku-btn btn btn-sm btn-outline-secondary">Generate
+                                                            SKU</button>
                                                     </div>
                                                 </div>
                                                 <div class="mb-3">
@@ -202,12 +203,12 @@
                                                                                         <img id="img_preview"
                                                                                             src="{{ asset('admin/assets/images/image-upload.png') }}"
                                                                                             alt="Click to upload"
-                                                                                            class="img-fluid h-100 object-fit-contain">
+                                                                                            class="image-preview img-fluid h-100 object-fit-contain">
                                                                                     </label>
                                                                                     <input type="file" id="var_image"
-                                                                                        name="var_image"
+                                                                                        name="var_image[]"
                                                                                         class="form-control d-none"
-                                                                                        onchange="previewImage(event)">
+                                                                                        onchange="previewImageMult(event)" multiple>
                                                                                 </div>
                                                                             </div>
 
@@ -216,13 +217,12 @@
                                                                                 <label for="var_sku"
                                                                                     class="form-label">SKU</label>
                                                                                 <div class="input-group">
-                                                                                    <input type="text" id="var_sku"
+                                                                                    <input id="var_sku" type="text"
                                                                                         name="var_sku"
                                                                                         class="form-control form-control-sm"
                                                                                         placeholder="VAR123">
                                                                                     <button type="button"
-                                                                                        class="btn btn-sm btn-outline-secondary"
-                                                                                        onclick="generateSKU('var_sku', 'VAR', 6)">
+                                                                                        class="generate-sku-btn btn btn-sm btn-outline-secondary">
                                                                                         Generate
                                                                                     </button>
                                                                                 </div>
@@ -624,36 +624,16 @@
             }
         });
     </script>
+
     <script>
-        function generateSKU(inputId, prefix = "PROD", length = 6) {
-            let random = Math.random().toString(36).substring(2, 2 + length).toUpperCase();
+        $(document).on('click', '.generate-sku-btn', function() {
+            const input = $(this).siblings('input[type="text"]');
+            let prefix = 'SKU-';
+            let random = Math.random().toString(36).substring(2, 2 + 6).toUpperCase();
             let sku = `${prefix}${random}`;
-            document.getElementById(inputId).value = sku;
-        }
-
-        function setupSKUField(inputId, prefix = "PROD", length = 6) {
-            const input = document.getElementById(inputId);
-            if (!input) return;
-
-            // Auto-generate on page load if empty
-            if (!input.value) {
-                generateSKU(inputId, prefix, length);
-            }
-
-            // Auto-generate on focus if still empty
-            input.addEventListener("focus", function() {
-                if (!this.value) {
-                    generateSKU(inputId, prefix, length);
-                }
-            });
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            setupSKUField('sku', 'PROD');
-            setupSKUField('var_sku', 'VAR');
+            input.val(sku);
         });
     </script>
-
 
     <script>
         // manageStock
@@ -733,22 +713,10 @@
 
 
     <script>
-        // A standalone function for SKU generation, as it is called with onclick
-        function generateSKU(button) {
-            const input = $(button).siblings('input[type="text"]');
-            let result = 'VAR';
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            for (let i = 0; i < 6; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            input.val(result);
-        }
-
-        // A standalone function for image preview, as it is called with onchange
-        function previewImage(event) {
+        function previewImageMult(event) {
             const reader = new FileReader();
             reader.onload = function() {
-                const output = event.target.closest('label').querySelector('img');
+                const output = $('.image-preview');
                 output.src = reader.result;
             };
             reader.readAsDataURL(event.target.files[0]);
