@@ -706,6 +706,12 @@
                 }
             }
         });
+        pickr.on('change', (color, instance) => {
+            if (color) {
+                colorInput.value = color.toHEXA().toString(0);
+            }
+            instance.hide();
+        });
         pickr.on('save', (color, instance) => {
             if (color) {
                 colorInput.value = color.toHEXA().toString(0);
