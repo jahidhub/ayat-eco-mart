@@ -192,33 +192,36 @@
                                                                         <div class="row g-3 align-items-end">
 
                                                                             <!-- Image -->
-                                                                            <div class="col-md-2 col-lg-3">
-                                                                                <label for="var_image"
-                                                                                    class="form-label">Image</label>
-                                                                                <div class="position-relative overflow-hidden border rounded p-1 bg-white text-center"
+                                                                            <div class="col-md-3">
+
+                                                                                {{-- <div class="position-relative overflow-hidden border rounded p-1 bg-white text-center"
                                                                                     style="height: 80px;">
                                                                                     <label for="var_image"
                                                                                         class="h-100 d-flex justify-content-center align-items-center"
                                                                                         style="cursor: pointer;">
-                                                                                        <img id="img_preview"
-                                                                                            src="{{ asset('admin/assets/images/image-upload.png') }}"
+                                                                                        <img src="{{ asset('admin/assets/images/image-upload.png') }}"
                                                                                             alt="Click to upload"
-                                                                                            class="image-preview img-fluid h-100 object-fit-contain">
+                                                                                            class="var-img-preview img-fluid h-100 object-fit-contain">
                                                                                     </label>
                                                                                     <input type="file" id="var_image"
                                                                                         name="var_image[]"
                                                                                         class="form-control d-none"
-                                                                                        onchange="previewImageMult(event)" multiple>
-                                                                                </div>
+                                                                                        onchange="previewImageMult(this)"
+                                                                                        multiple>
+                                                                                </div> --}}
+                                                                                <input type="file" id="var_image"
+                                                                                    name="var_image[]"
+                                                                                    class="form-control" multiple>
+
                                                                             </div>
 
                                                                             <!-- SKU -->
-                                                                            <div class="col-11 col-md-9 col-lg-8">
+                                                                            <div class="col-md-6">
                                                                                 <label for="var_sku"
                                                                                     class="form-label">SKU</label>
                                                                                 <div class="input-group">
                                                                                     <input id="var_sku" type="text"
-                                                                                        name="var_sku"
+                                                                                        name="var_sku[]"
                                                                                         class="form-control form-control-sm"
                                                                                         placeholder="VAR123">
                                                                                     <button type="button"
@@ -229,14 +232,20 @@
                                                                             </div>
 
                                                                             <!-- Color -->
-                                                                            <div class="col-1 col-md-1 col-lg-1">
-                                                                                <label for="color"
+                                                                           
+                                                                            <div class="col-md-3">
+                                                                                <label for="color_id"
                                                                                     class="form-label">Color</label>
-                                                                                <input type="text"
-                                                                                    class="form-control d-none"
-                                                                                    id="color" name="color">
-                                                                                <div class="pickr"></div>
+                                                                                <div class="input-group">
+                                                                                    <input type="text"
+                                                                                        class="form-control color_id"
+                                                                                        id="color_id"
+                                                                                        name="color[]">
+                                                                                    <div class="pickr"></div>
+                                                                                </div>
                                                                             </div>
+                                                                         
+
                                                                             <!-- Regular Price -->
                                                                             <div class="col-md-4 col-xxl-3">
                                                                                 <label for="var_regular_Price"
@@ -245,7 +254,7 @@
                                                                                 <input type="number"
                                                                                     class="form-control form-control-sm"
                                                                                     id="var_regular_Price"
-                                                                                    name="var_regular_Price"
+                                                                                    name="var_regular_Price[]"
                                                                                     placeholder="0.00">
                                                                             </div>
 
@@ -257,7 +266,7 @@
                                                                                 <input type="number"
                                                                                     class="form-control form-control-sm"
                                                                                     id="var_sale_Price"
-                                                                                    name="var_sale_Price"
+                                                                                    name="var_sale_Price[]"
                                                                                     placeholder="0.00">
                                                                             </div>
                                                                             <!-- Quantity -->
@@ -266,8 +275,8 @@
                                                                                     class="form-label">Qty</label>
                                                                                 <input type="number"
                                                                                     class="form-control form-control-sm"
-                                                                                    id="var_quantity" name="var_quantity"
-                                                                                    placeholder="0">
+                                                                                    id="var_quantity"
+                                                                                    name="var_quantity[]" placeholder="0">
                                                                             </div>
 
 
@@ -277,7 +286,7 @@
                                                                                 <label for="var_size_id"
                                                                                     class="form-label">Size</label>
                                                                                 <select id="var_size_id"
-                                                                                    name="var_size_id"
+                                                                                    name="var_size_id[]"
                                                                                     class="form-select form-select-sm">
                                                                                     <option value="">Select Size
                                                                                     </option>
@@ -295,7 +304,7 @@
                                                                                     class="form-label">Weight (kg)</label>
                                                                                 <input type="number"
                                                                                     class="form-control form-control-sm"
-                                                                                    id="var_weight" name="var_weight"
+                                                                                    id="var_weight" name="var_weight[]"
                                                                                     placeholder="0">
                                                                             </div>
 
@@ -305,7 +314,7 @@
                                                                                     class="form-label">Length (cm)</label>
                                                                                 <input type="number"
                                                                                     class="form-control form-control-sm"
-                                                                                    id="var_length" name="var_length"
+                                                                                    id="var_length" name="var_length[]"
                                                                                     placeholder="0">
                                                                             </div>
 
@@ -315,7 +324,7 @@
                                                                                     class="form-label">Width (cm)</label>
                                                                                 <input type="number"
                                                                                     class="form-control form-control-sm"
-                                                                                    id="var_width" name="var_width"
+                                                                                    id="var_width" name="var_width[]"
                                                                                     placeholder="0">
                                                                             </div>
 
@@ -325,7 +334,7 @@
                                                                                     class="form-label">Height (cm)</label>
                                                                                 <input type="number"
                                                                                     class="form-control form-control-sm"
-                                                                                    id="var_height" name="var_height"
+                                                                                    id="var_height" name="var_height[]"
                                                                                     placeholder="0">
                                                                             </div>
                                                                         </div>
@@ -453,6 +462,7 @@
 @endsection
 
 @section('customJs')
+    {{-- attribute-checkboxes --}}
     <script>
         $(document).ready(function() {
             const categoryId = $('#category_id');
@@ -624,7 +634,7 @@
             }
         });
     </script>
-
+    {{-- generate-sku-btn --}}
     <script>
         $(document).on('click', '.generate-sku-btn', function() {
             const input = $(this).siblings('input[type="text"]');
@@ -635,8 +645,8 @@
         });
     </script>
 
+    {{-- manageStock --}}
     <script>
-        // manageStock
         $(document).ready(function() {
             const manageStock = $('#manageStock');
             const quantityContainer = $('#quantity-container');
@@ -675,10 +685,10 @@
     </script>
 
 
+    {{-- color Pickr --}}
 
     <script>
-        const colorInput = document.getElementById('color');
-
+        const colorInput = document.querySelectorAll('.color_id');
         const pickr = Pickr.create({
             el: '.pickr',
             theme: 'classic',
@@ -696,8 +706,6 @@
                 }
             }
         });
-
-        // When user saves a color
         pickr.on('save', (color, instance) => {
             if (color) {
                 colorInput.value = color.toHEXA().toString(0);
@@ -708,21 +716,38 @@
 
 
 
-
-    {{-- ----------------- --}}
+    {{-- previewImageMult --}}
 
 
     <script>
-        function previewImageMult(event) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const output = $('.image-preview');
-                output.src = reader.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
+        // function previewImageMult(input) {
+        //     const files = input.files;
+        //     if (!files.length) return;
 
+        //     // Get preview container
+        //     const preview = input.closest('.position-relative').querySelector('.var-img-preview');
+
+        //     // Handle only the first file (if you want multiple previews, we’ll extend later)
+        //     const file = files[0];
+
+        //     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        //         alert('Only JPG, PNG, WEBP formats are allowed.');
+        //         input.value = ''; // reset input
+        //         return;
+        //     }
+
+
+
+        //     preview.src = URL.createObjectURL(file);
+        // }
+    </script>
+
+
+    {{-- // This function clones the whole card and resets the inputs. --}}
+
+    <script>
         // This function clones the whole card and resets the inputs.
+
         function cloneAndAppendVariation() {
             const variationsContainer = $('#var-container');
             const variationTemplate = variationsContainer.find('#var-content').first();
@@ -730,7 +755,7 @@
 
             // Clear input values in the new variation
             newVariation.find('input, select').val('');
-            newVariation.find('#img-preview').attr('src', 'https://placehold.co/100x100/E5E7EB/4B5563?text=Upload');
+            newVariation.find('.var-img-preview').attr('src', '');
 
             // Append the new variation to the container
             variationsContainer.append(newVariation);
@@ -739,6 +764,7 @@
             $('#add-new-variation').hide();
             newVariation.find('#add-new-variation').show();
         }
+
 
         // This function removes the parent card of the clicked element.
 

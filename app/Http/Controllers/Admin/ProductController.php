@@ -53,7 +53,7 @@ class ProductController extends Controller
     {
 
 
-        // dd($request->all());
+        dd($request->all());
 
 
         $rules = [
