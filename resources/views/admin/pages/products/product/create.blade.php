@@ -719,13 +719,9 @@
             instance.hide();
         });
     </script>
-
-
-
     {{-- previewImageMult --}}
-
-
     <script>
+
         // function previewImageMult(input) {
         //     const files = input.files;
         //     if (!files.length) return;
@@ -743,9 +739,9 @@
         //     }
 
 
-
         //     preview.src = URL.createObjectURL(file);
         // }
+
     </script>
 
 
